@@ -29,6 +29,8 @@ import voip.SkypeLocalLibrary;
 public class TangibleVirtualGame extends Functions {
 	public static final String GAME_TITLE = "TangibleVirtualGame";
 
+	protected static final String MORE_INFORMATION = "This is more information";
+
 	public static JFrame frame;
 
 	protected static Call lastCall;
@@ -37,7 +39,7 @@ public class TangibleVirtualGame extends Functions {
 
 	public static void main(String[] args) {
 		try {
-			GUIFunctions.createFrame(startScreen());
+			GUIFunctions.createFrame(startScreen(), JFrame.EXIT_ON_CLOSE,"Welcome");
 		} catch (RequirementsNotMetException e) {
 			System.out.println("Requirements are not met");
 			e.printStackTrace();
@@ -51,7 +53,7 @@ public class TangibleVirtualGame extends Functions {
 		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
 		JPanel p = (JPanel) panel;
 		GridLayout layout = new GridLayout();
-		layout.setColumns(3);
+		layout.setColumns(4);
 		p.setLayout(layout);
 		JButton contactButton = new JButton("View Contacts");
 		contactButton.addActionListener(new ActionListener() {
@@ -75,8 +77,26 @@ public class TangibleVirtualGame extends Functions {
 		});
 		p.add(contactSearchButton);
 		JButton moreInfoButton = new JButton("More Information");
+		moreInfoButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, MORE_INFORMATION);
+			}
+			
+		});
 		p.add(moreInfoButton);
-		// JButton downloadSkypeButton = new JButton("Download Skype");
+		JButton downloadSkypeButton = new JButton("Download Skype");
+		downloadSkypeButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String url = "http://www.skype.com/nl/download-skype/skype-for-windows/downloading/";
+				openWebsite(url);
+			}
+			
+		});
+		p.add(downloadSkypeButton);
 		return panel;
 	}
 
@@ -134,7 +154,7 @@ public class TangibleVirtualGame extends Functions {
 		return panel;
 	}
 
-	class Foo implements ActionListener {
+	class SearchScreen implements ActionListener {
 		HashMap<String, Component> friendsListOnPanel = new HashMap<String, Component>();
 
 		SkypeLocalLibrary skype = new SkypeLocalLibrary();
@@ -196,9 +216,10 @@ public class TangibleVirtualGame extends Functions {
 
 	public static Component contactSearchScreen() {
 		TangibleVirtualGame g = new TangibleVirtualGame();
-		Foo listener = g.new Foo();
-
+		SearchScreen listener = g.new SearchScreen();
 		return listener.run();
 	}
+	
+	
 
 }

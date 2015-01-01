@@ -1,7 +1,11 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -10,7 +14,9 @@ import java.net.URISyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import voip.SkypeLocalLibrary;
 
@@ -47,23 +53,32 @@ public class GUIFunctions extends Functions {
 	private static boolean confimationMessage(String message) {
 		return JOptionPane.showConfirmDialog(TangibleVirtualGame.frame, message) == JOptionPane.OK_OPTION;
 	}
-
-	public static void openWebsite(String url) {
-		try {
-			URI uri = new URI(url);
-			Desktop dt = Desktop.getDesktop();
-			dt.browse(uri);
-		} catch (IOException | URISyntaxException e) {
-			errorHandler(e);
-		}
-	}
+	
 	public static void createFrame(Component panel) {
-		createFrame(panel, JFrame.EXIT_ON_CLOSE);
+		createFrame(panel, JFrame.EXIT_ON_CLOSE, null);
+	}
+	public static void createFrame(Component panel, int defCloseOperation) {
+		createFrame(panel, defCloseOperation, null);
 	}
 
-	public static void createFrame(Component panel, int defCloseOperation) {
+	public static void createFrame(Component panel, int defCloseOperation, String title) {
 		// Start by creating a frame
 		TangibleVirtualGame.frame = new JFrame(TangibleVirtualGame.GAME_TITLE);
+		// Create a title (if needed)
+		if(title != null){
+			JPanel titlePanel = new JPanel();
+			JLabel titleLabel = new JLabel(title);
+			System.out.println("titleLabel.getText()="+titleLabel.getText());
+			titlePanel.setSize(TangibleVirtualGame.frame.getWidth(), 150);
+			titlePanel.setAlignmentX(Frame.CENTER_ALIGNMENT);
+			titlePanel.setAlignmentY(Frame.CENTER_ALIGNMENT);
+			titlePanel.setBackground(Color.RED);
+			titlePanel.add(titleLabel);
+			
+			titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
+			
+			TangibleVirtualGame.frame.add(titlePanel, BorderLayout.PAGE_START);
+		}
 		// Create a panel
 		panel.setVisible(true);
 		panel.setEnabled(true);

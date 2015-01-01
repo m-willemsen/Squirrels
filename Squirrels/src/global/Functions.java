@@ -2,9 +2,12 @@ package global;
 
 import gui.TangibleVirtualGame;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -52,5 +55,15 @@ public class Functions {
 			return waar;
 		}
 		return onwaar;
+	}
+	
+	public static void openWebsite(String url) {
+		try {
+			URI uri = new URI(url);
+			Desktop dt = Desktop.getDesktop();
+			dt.browse(uri);
+		} catch (IOException | URISyntaxException e) {
+			errorHandler(e);
+		}
 	}
 }
