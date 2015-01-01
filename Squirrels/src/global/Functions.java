@@ -46,4 +46,11 @@ public class Functions {
 			return false;
 		}
 	}
+	
+	public static String returnIf(boolean condition, String waar, String onwaar){
+		if(condition){
+			return waar;
+		}
+		return onwaar;
+	}
 }

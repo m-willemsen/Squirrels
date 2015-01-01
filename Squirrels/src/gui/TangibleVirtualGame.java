@@ -33,6 +33,8 @@ public class TangibleVirtualGame extends Functions {
 
 	protected static Call lastCall;
 
+	private static HashMap<String, Component> friendsListOnPanel;
+
 	public static void main(String[] args) {
 		try {
 			GUIFunctions.createFrame(startScreen());
@@ -60,7 +62,7 @@ public class TangibleVirtualGame extends Functions {
 			}
 
 		});
-		
+
 		p.add(contactButton);
 		JButton contactSearchButton = new JButton("Search Contacts");
 		contactSearchButton.addActionListener(new ActionListener() {
@@ -80,46 +82,43 @@ public class TangibleVirtualGame extends Functions {
 
 	private static boolean runPreProgramChecks() throws RequirementsNotMetException {
 		HashMap<String, String> errors = new HashMap<String, String>();
-		//Check if skype is installed
-		if (!Skype.isInstalled()){
+		// Check if skype is installed
+		if (!Skype.isInstalled()) {
 			errors.put("Install Skype", "You need to install skype to be able to run this program");
 		}
-		//Check if skype is started
+		// Check if skype is started
 		try {
-			if (!Skype.isRunning()){
+			if (!Skype.isRunning()) {
 				errors.put("Start Skype", "You need to start skype before starting this program");
 			}
 		} catch (SkypeException e) {
 			errorHandler(e);
 			errors.put(e.getMessage(), Arrays.toString(e.getStackTrace()));
 		}
-		//Check if there is an internet connection
-		if(!checkInternetConnection()){
+		// Check if there is an internet connection
+		if (!checkInternetConnection()) {
 			errors.put("Create internet connection", "You need an internet connection to be able to run this program");
 		}
-		//Now check if there are any errors.
-		if (errors.size()>0){
-			String errormessage = "Please resolve these errors:\n"+showErrors(errors);
+		// Now check if there are any errors.
+		if (errors.size() > 0) {
+			String errormessage = "Please resolve these errors:\n" + showErrors(errors);
 			System.out.println(errormessage);
-			JOptionPane.showMessageDialog(null, errormessage, "There were errors while starting this program", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, errormessage, "There were errors while starting this program",
+					JOptionPane.ERROR_MESSAGE);
 			throw new RequirementsNotMetException(errormessage);
 		}
 		return true;
 	}
 
-
-
 	private static String showErrors(HashMap<String, String> errors) {
 		String result = "";
 		Iterator<Entry<String, String>> iter = errors.entrySet().iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Entry<String, String> entry = iter.next();
-			result+="- "+entry.getKey()+": "+entry.getValue()+"\n";
+			result += "- " + entry.getKey() + ": " + entry.getValue() + "\n";
 		}
 		return result;
 	}
-
-
 
 	public static Component contactScreen() {
 		Component panel = new JPanel();
@@ -129,61 +128,77 @@ public class TangibleVirtualGame extends Functions {
 			for (Friend friend : skype.getContacts()) {
 				((JPanel) panel).add(skype.createIntoButton(friend, GUIFunctions.defaultActionListener()));
 			}
-		} catch (SkypeException e) {
+		} catch (SkypeException | exceptions.SkypeException e) {
 			errorHandler(e);
 		}
 		return panel;
 	}
 
-	public static Component contactSearchScreen() {
+	class Foo implements ActionListener {
 		HashMap<String, Component> friendsListOnPanel = new HashMap<String, Component>();
-		Component panel = new JPanel();
-		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
-		JPanel p = (JPanel) panel;
+
 		SkypeLocalLibrary skype = new SkypeLocalLibrary();
 
 		// Create search textfield
 		JTextField tf = new JTextField();
-		tf.setColumns(30);
-		ActionListener listener = new ActionListener() {
+		Component panel = new JPanel();
+		//
+		JPanel p = (JPanel) panel;
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// Create buttons for results
-				try {
-					//Remove all previous results
-					Iterator<Entry<String, Component>> iter = friendsListOnPanel.entrySet().iterator();
-					while (iter.hasNext()){
-						p.remove(iter.next().getValue());
-					}
-					Friend[] friends = skype.getContacts(tf.getText());
-					if (friends.length > 0) {
-						//Add the new results
-						for (Friend friend : friends) {
-							JButton bt = skype.createIntoButton(friend, GUIFunctions.defaultActionListener());
-							friendsListOnPanel.put(friend.getId(), bt);
-							p.add(bt);
-						}
-					} else {
-						JLabel bt = new JLabel("There were no results");
-						p.add(bt);
-						friendsListOnPanel.put("none", bt);
-					}
-					p.invalidate();p.repaint();p.setVisible(true);frame.invalidate();frame.repaint();frame.setVisible(true);
-				} catch (SkypeException e) {
-					errorHandler(e);
+		public Component run() {
+
+			panel.setSize(Frame.WIDTH, Frame.HEIGHT);
+			tf.setColumns(30);
+			tf.addActionListener(this);
+			p.add(tf);
+			// Create search button
+			JButton submit = new JButton("Search!");
+			submit.setActionCommand(tf.getText());
+			p.add(submit);
+			// Create actionlistener for search button
+			submit.addActionListener(this);
+			return panel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// Create buttons for results
+			try {
+				// Remove all previous results
+				Iterator<Entry<String, Component>> iter = friendsListOnPanel.entrySet().iterator();
+				while (iter.hasNext()) {
+					p.remove(iter.next().getValue());
 				}
+				Friend[] friends = skype.getContacts(tf.getText());
+				if (friends.length > 0) {
+					// Add the new results
+					for (Friend friend : friends) {
+						JButton bt = skype.createIntoButton(friend, GUIFunctions.defaultActionListener());
+						friendsListOnPanel.put(friend.getId(), bt);
+						p.add(bt);
+					}
+				} else {
+					JLabel bt = new JLabel("There were no results");
+					p.add(bt);
+					friendsListOnPanel.put("none", bt);
+				}
+				p.invalidate();
+				p.repaint();
+				p.setVisible(true);
+				frame.invalidate();
+				frame.repaint();
+				frame.setVisible(true);
+			} catch (SkypeException | exceptions.SkypeException e) {
+				errorHandler(e);
 			}
-		};
-		tf.addActionListener(listener);
-		p.add(tf);
-		// Create search button
-		JButton submit = new JButton("Search!");
-		submit.setActionCommand(tf.getText());
-		p.add(submit);
-		// Create actionlistener for search button
-		submit.addActionListener(listener);
-		return panel;
+		}
+	}
+
+	public static Component contactSearchScreen() {
+		TangibleVirtualGame g = new TangibleVirtualGame();
+		Foo listener = g.new Foo();
+
+		return listener.run();
 	}
 
 }

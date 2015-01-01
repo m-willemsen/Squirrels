@@ -23,10 +23,10 @@ import exceptions.FriendNotFoundException;
 import global.Functions;
 
 public class SkypeLocalLibrary extends Functions {
-	private boolean videoStatus = true;
+	private static boolean videoStatus = true;
 	private ConnectorListener listener;
 
-	public Friend[] getContacts() throws SkypeException {
+	public Friend[] getContacts() throws SkypeException, exceptions.SkypeException {
 		checkConditions();
 		Friend[] contacts = Skype.getContactList().getAllFriends();
 		Arrays.sort(contacts, getContactComparator());
@@ -111,7 +111,7 @@ public class SkypeLocalLibrary extends Functions {
 		return "Unable to get any data";
 	}
 
-	public JButton createIntoButton(Friend friend, ActionListener listener) throws SkypeException {
+	public JButton createIntoButton(Friend friend, ActionListener listener) throws SkypeException, exceptions.SkypeException {
 		checkConditions();
 		String display = friend.getFullName();
 		if (display == null || display.equals("") || display.equals("-")) {
@@ -126,12 +126,12 @@ public class SkypeLocalLibrary extends Functions {
 		return button;
 	}
 
-	public Chat getChat(String friendId) throws SkypeException {
+	public Chat getChat(String friendId) throws SkypeException, exceptions.SkypeException {
 		checkConditions();
 		return Skype.getContactList().getFriend(friendId).chat();
 	}
 
-	public Friend getFriend(String friendId) throws SkypeException, FriendNotFoundException {
+	public Friend getFriend(String friendId) throws SkypeException, FriendNotFoundException, exceptions.SkypeException {
 		checkConditions();
 		Friend res = Skype.getContactList().getFriend(friendId);
 		if (res == null)
@@ -139,27 +139,27 @@ public class SkypeLocalLibrary extends Functions {
 		return res;
 	}
 
-	public Call startCall(String friendId) throws SkypeException, FriendNotFoundException {
+	public Call startCall(String friendId) throws SkypeException, FriendNotFoundException, exceptions.SkypeException {
 		checkConditions();
 		return getFriend(friendId).call();
 	}
 
-	public void toggleVideo(Call call) throws SkypeException {
+	public static void toggleVideo(Call call) throws SkypeException {
 		boolean newvideoStatus = !videoStatus;
 		videoStatus = newvideoStatus;
 		call.setReceiveVideoEnabled(videoStatus);
 	}
 
-	private void checkConditions() throws SkypeException {
+	private void checkConditions() throws exceptions.SkypeException, SkypeException {
 		if (!Skype.isInstalled()) {
-			throw new SkypeException("Please install Skype from skype.com");
+			throw new exceptions.SkypeException("Please install Skype from skype.com");
 		}
 		if (!Skype.isRunning()) {
-			throw new SkypeException("Please start Skype");
+			throw new exceptions.SkypeException("Please start Skype");
 		}
 	}
 
-	public Friend[] getContacts(String skypeId) throws SkypeException {
+	public Friend[] getContacts(String skypeId) throws SkypeException, exceptions.SkypeException {
 		checkConditions();
 		Friend[] contacts = Skype.getContactList().getAllFriends();
 		Arrays.sort(contacts, getContactComparator());

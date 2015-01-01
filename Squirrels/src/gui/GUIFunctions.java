@@ -35,7 +35,7 @@ public class GUIFunctions extends Functions {
 						c.setSendVideoEnabled(true);
 						c.setReceiveVideoEnabled(true);
 						TangibleVirtualGame.lastCall = c;
-					} catch (SkypeException | FriendNotFoundException e) {
+					} catch (SkypeException | FriendNotFoundException | exceptions.SkypeException e) {
 						errorHandler(e);
 					}
 				}
@@ -73,5 +73,26 @@ public class GUIFunctions extends Functions {
 		TangibleVirtualGame.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		TangibleVirtualGame.frame.setVisible(true);
 	}
+	
+	public static JButton toggleVideoButton(){
+		JButton button = null;
+		try {
+			button = new JButton("Turn video "+returnIf(TangibleVirtualGame.lastCall.isSendVideoEnabled(), "off", "on"));
+			button.addActionListener(new ActionListener(){
 
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						SkypeLocalLibrary.toggleVideo(TangibleVirtualGame.lastCall);
+					} catch (SkypeException e) {
+						errorHandler(e);
+					}
+				}
+				
+			});
+		} catch (SkypeException e) {
+			errorHandler(e);
+		}
+		return button;
+	}
 }
