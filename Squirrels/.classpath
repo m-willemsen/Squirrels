@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/JMF-2.1.1e/lib/jmf.properties"/>
 	<classpathentry kind="lib" path="lib/JMF-2.1.1e/lib/mediaplayer.jar"/>
 	<classpathentry kind="lib" path="lib/JMF-2.1.1e/lib/multiplayer.jar"/>
+	<classpathentry kind="src" path="/skype"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
