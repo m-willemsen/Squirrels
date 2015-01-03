@@ -3,6 +3,7 @@
 	<name>Squirrels</name>
 	<comment></comment>
 	<projects>
+		<project>skype</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
