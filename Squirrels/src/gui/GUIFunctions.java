@@ -3,15 +3,10 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +19,8 @@ import com.skype.Call;
 import com.skype.SkypeException;
 
 import exceptions.FriendNotFoundException;
+import game.GameHandler;
+import game.Protocol;
 import global.Functions;
 
 public class GUIFunctions extends Functions {
@@ -35,12 +32,14 @@ public class GUIFunctions extends Functions {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean confirmed = confimationMessage("Are you sure you want to call this friend?");
 				if (confirmed && arg0.getSource() instanceof JButton) {
-					SkypeLocalLibrary skype = new SkypeLocalLibrary();
 					try {
+						SkypeLocalLibrary skype = new SkypeLocalLibrary();
 						Call c = skype.startCall(arg0.getActionCommand());
-						c.setSendVideoEnabled(true);
-						c.setReceiveVideoEnabled(true);
 						TangibleVirtualGame.lastCall = c;
+						System.out.println("Call created, now start the game");
+						TangibleVirtualGame.frame.dispose();
+						createFrame(gameScreen());
+						c.setSendVideoEnabled(true);
 					} catch (SkypeException | FriendNotFoundException | exceptions.SkypeException e) {
 						errorHandler(e);
 					}
@@ -48,6 +47,24 @@ public class GUIFunctions extends Functions {
 			}
 
 		};
+	}
+
+	protected static Component gameScreen() {
+		Component panel = new JPanel();
+		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
+		JPanel p = (JPanel) panel;
+		JButton startButton = new JButton("Start!!");
+		startButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GameHandler gh = new GameHandler();
+				gh.sendCommand(Protocol.START, null);
+			}
+			
+		});
+		p.add(startButton);
+		return panel;
 	}
 
 	private static boolean confimationMessage(String message) {
@@ -98,7 +115,8 @@ public class GUIFunctions extends Functions {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						SkypeLocalLibrary.toggleVideo(TangibleVirtualGame.lastCall);
+						SkypeLocalLibrary skype = new SkypeLocalLibrary();
+						skype.toggleVideo(TangibleVirtualGame.lastCall);
 					} catch (SkypeException e) {
 						errorHandler(e);
 					}

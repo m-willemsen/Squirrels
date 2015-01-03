@@ -37,14 +37,14 @@ public final class Call extends SkypeObject {
     /**
      * Collection of Call objects, filled at runtime when new CALL objects are created (by events or by application).
      */
-    private static final Map<String, Call> calls = new HashMap<String, Call>();
+    public static final Map<String, Call> calls = new HashMap<String, Call>();
     
     /**
      * Returns the Call object by the specified id.
      * @param id whose associated Call object is to be returned.
      * @return Call object with ID == id.
      */
-    static Call getInstance(final String id) {
+    public static Call getInstance(final String id) {
         synchronized(calls) {
             if (!calls.containsKey(id)) {
                 calls.put(id, new Call(id));

@@ -46,7 +46,7 @@ public final class Skype {
     /** CHATMESSAGE listener. */
     private static ConnectorListener chatMessageListener;
     /** Collection of listeners. */
-    private static List<ChatMessageListener> chatMessageListeners = Collections.synchronizedList(new ArrayList<ChatMessageListener>());
+    public static List<ChatMessageListener> chatMessageListeners = Collections.synchronizedList(new ArrayList<ChatMessageListener>());
 
     /** callListener lock object. */
     private static Object callListenerMutex = new Object();

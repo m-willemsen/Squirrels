@@ -33,7 +33,7 @@ public class TangibleVirtualGame extends Functions {
 
 	public static JFrame frame;
 
-	protected static Call lastCall;
+	public static Call lastCall;
 
 	private static HashMap<String, Component> friendsListOnPanel;
 
@@ -143,8 +143,8 @@ public class TangibleVirtualGame extends Functions {
 	public static Component contactScreen() {
 		Component panel = new JPanel();
 		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
-		SkypeLocalLibrary skype = new SkypeLocalLibrary();
 		try {
+			SkypeLocalLibrary skype = new SkypeLocalLibrary();
 			for (Friend friend : skype.getContacts()) {
 				((JPanel) panel).add(skype.createIntoButton(friend, GUIFunctions.defaultActionListener()));
 			}
@@ -157,7 +157,7 @@ public class TangibleVirtualGame extends Functions {
 	class SearchScreen implements ActionListener {
 		HashMap<String, Component> friendsListOnPanel = new HashMap<String, Component>();
 
-		SkypeLocalLibrary skype = new SkypeLocalLibrary();
+		
 
 		// Create search textfield
 		JTextField tf = new JTextField();
@@ -184,6 +184,7 @@ public class TangibleVirtualGame extends Functions {
 		public void actionPerformed(ActionEvent arg0) {
 			// Create buttons for results
 			try {
+				SkypeLocalLibrary skype = new SkypeLocalLibrary();
 				// Remove all previous results
 				Iterator<Entry<String, Component>> iter = friendsListOnPanel.entrySet().iterator();
 				while (iter.hasNext()) {
