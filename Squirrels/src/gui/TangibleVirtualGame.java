@@ -94,6 +94,7 @@ public class TangibleVirtualGame extends Functions {
 							if(GUIFunctions.confimationMessage("You are being called by "+lastCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 								callReceived = true;
 								lastCall.answer();
+								GUIFunctions.createFrame(GUIFunctions.gameScreen());
 							}
 							else {
 								lastCall.cancel();
