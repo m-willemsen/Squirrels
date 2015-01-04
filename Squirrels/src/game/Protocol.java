@@ -16,11 +16,13 @@ public class Protocol extends Functions {
 	public static final String DOMOVE = "DOMOVE";
 	public static final String RESET = "RESET";
 	public static final String ERROR = "ERROR";
+	public static final String CONFIRM_ANSWER = "ANSWER";
 	//End of commands
 	public static String kvd = "->"; // Key-value divider
 	public static String ed = "\n"; //Entry divider
 	public static String datasource = DOMOVE+kvd+"DIDMOVE"+ed+
 			START+kvd+"STARTED"+ed+
+			CONFIRM_ANSWER+kvd+"ANSWERED"+ed+
 			RESET+kvd+"RESETTED"+ed;
 	
 	public Protocol(){
