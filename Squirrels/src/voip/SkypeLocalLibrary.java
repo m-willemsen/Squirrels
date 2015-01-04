@@ -241,6 +241,8 @@ public class SkypeLocalLibrary extends Functions {
 
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
+				TangibleVirtualGame.lastCall = receivedCall;
+				
 				System.out.println("callReceived triggered: " + receivedCall.getPartnerId());
 			}
 

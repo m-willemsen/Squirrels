@@ -67,7 +67,7 @@ public class GUIFunctions extends Functions {
 		return panel;
 	}
 
-	private static boolean confimationMessage(String message) {
+	public static boolean confimationMessage(String message) {
 		return JOptionPane.showConfirmDialog(TangibleVirtualGame.frame, message) == JOptionPane.OK_OPTION;
 	}
 	

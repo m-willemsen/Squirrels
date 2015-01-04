@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.skype.Call;
+import com.skype.CallListener;
 import com.skype.Friend;
 import com.skype.Skype;
 import com.skype.SkypeException;
@@ -76,6 +77,40 @@ public class TangibleVirtualGame extends Functions {
 
 		});
 		p.add(contactSearchButton);
+		JButton waitForCall = new JButton("Wait for call.");
+		waitForCall.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "We will wait for any calls to your Skype cliënt");
+				
+				try {
+					SkypeLocalLibrary skype = new SkypeLocalLibrary();
+					boolean callReceived = false;
+
+					while(!callReceived){
+						Thread.sleep(1000);
+						if (lastCall!=null){
+							if(GUIFunctions.confimationMessage("You are being called by "+lastCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
+								callReceived = true;
+								lastCall.answer();
+							}
+							else {
+								lastCall.cancel();
+								lastCall = null;
+							}
+						}
+						else {
+							System.out.println("No calls yet, we will wait some longer.");
+						}
+					}
+				} catch (SkypeException | InterruptedException ex) {
+					errorHandler(ex);
+				}
+			}
+			
+		});
+		p.add(waitForCall);
 		JButton moreInfoButton = new JButton("More Information");
 		moreInfoButton.addActionListener(new ActionListener(){
 
