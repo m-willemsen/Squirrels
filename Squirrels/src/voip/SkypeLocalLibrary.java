@@ -33,6 +33,7 @@ import exceptions.FriendNotFoundException;
 import game.GameHandler;
 import game.Protocol;
 import global.Functions;
+import gui.GUI;
 import gui.GUIFunctions;
 import gui.TangibleVirtualGame;
 
@@ -40,6 +41,7 @@ public class SkypeLocalLibrary extends Functions {
 	private boolean videoStatus = true;
 	private ConnectorListener listener;
 	private Application app;
+	private GUI g;
 
 	public Friend[] getContacts() throws SkypeException, exceptions.SkypeException {
 		checkConditions();
@@ -149,7 +151,7 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public Chat getChat() throws SkypeException, exceptions.SkypeException {
-		return getChat(TangibleVirtualGame.lastCall.getPartnerId());
+		return getChat(GUI.lastCall.getPartnerId());
 	}
 
 	public Friend getFriend(String friendId) throws SkypeException, FriendNotFoundException, exceptions.SkypeException {
@@ -251,7 +253,7 @@ public class SkypeLocalLibrary extends Functions {
 				TangibleVirtualGame.lastCall = receivedCall;
 				if(GUIFunctions.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 					receivedCall.answer();
-					GUIFunctions.createFrame(GUIFunctions.gameScreen());
+					GUIFunctions.createFrame(g.gf.gameScreen());
 				}
 				else {
 					receivedCall.cancel();
@@ -314,8 +316,7 @@ public class SkypeLocalLibrary extends Functions {
 	protected void sendMessageToGame(ChatMessage receivedChatMessage) {
 		try {
 			if (TangibleVirtualGame.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(TangibleVirtualGame.lastCall.getPartnerId())){
-				GameHandler gh = new GameHandler();
-				gh.receiveCommandsFromSkype(receivedChatMessage.getContent());
+				g.gh.receiveCommandsFromSkype(receivedChatMessage.getContent());
 			}
 		} catch (SkypeException e) {
 			errorHandler(e);
@@ -327,8 +328,9 @@ public class SkypeLocalLibrary extends Functions {
 				+ "friend: " + stream.getFriend().toString());
 	}
 
-	public SkypeLocalLibrary() throws SkypeException {
+	public SkypeLocalLibrary(GUI g) throws SkypeException {
 		initSkype();
+		this.g = g;
 	}
 
 	public void setVideoOn(boolean status) throws SkypeException {

@@ -7,6 +7,8 @@ import com.skype.SkypeException;
 
 import voip.SkypeLocalLibrary;
 import global.Functions;
+import gui.GUI;
+import gui.GUIFunctions;
 import gui.TangibleVirtualGame;
 
 public class GameHandler extends Functions {
@@ -23,10 +25,13 @@ public class GameHandler extends Functions {
 	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
 	private int positionOpponentPawn;
 	private ReentrantLock lock = new ReentrantLock();
+	
+	private GUI g;
 
 	// TODO Fix that this class will handle the game
-	public GameHandler() {
+	public GameHandler(GUI g) {
 		init(false);
+		this.g = g;
 	}
 
 	public GameHandler(boolean isGameStarted) {
@@ -101,6 +106,7 @@ public class GameHandler extends Functions {
 		if (!isGameStarted) {
 			sendCommand(Protocol.START, null);
 		}
+		g.gf.refreshGameScreen();
 		reset();
 		
 		//TODO start something here, that will monitor the game
@@ -133,7 +139,7 @@ public class GameHandler extends Functions {
 		else {
 			//Turn of the cam!!
 			try {
-				SkypeLocalLibrary skype = new SkypeLocalLibrary();
+				SkypeLocalLibrary skype = new SkypeLocalLibrary(g);
 				skype.setVideoOn(false);
 			} catch (SkypeException e) {
 				errorHandler(e);
@@ -159,7 +165,6 @@ public class GameHandler extends Functions {
 	public String sendCommand(String command, String[] parameters) {
 		try {
 			lock.lock();
-			SkypeLocalLibrary skype = new SkypeLocalLibrary();
 			if (command == null) {
 				throw new SkypeException("No command found");
 			}
@@ -167,7 +172,10 @@ public class GameHandler extends Functions {
 			if (parameters != null)
 				message += Protocol.DIVIDER + implode(parameters, Protocol.DIVIDER);
 			System.out.println("SEND THIS: " + message);
-			skype.getChat().send(message);
+			System.out.println(g);
+			System.out.println(g.skype);
+			System.out.println(g.skype.getChat());
+			g.skype.getChat().send(message);
 			messageSend = message;
 			return message;
 		} catch (SkypeException | exceptions.SkypeException e) {

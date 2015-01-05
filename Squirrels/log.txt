@@ -1,20 +1,170 @@
 ---------------------------------------
-ID: live:tsonderen108 
+ID: basia_szafran 
  DisplayName:  
- FullName: Tim 108 
- OnlineStatus: ONLINE 
- MoodMessage: whiskyworld.us.to 
+ FullName: Patriono and Basia 
+ OnlineStatus: AWAY 
+ MoodMessage:  
+ isAuthorized: true 
+ isVideoCapable: false
+---------------------------------------
+
+---------------------------------------
+ID: bojangleseternal 
+ DisplayName:  
+ FullName: Bo Crowley 
+ OnlineStatus: AWAY 
+ MoodMessage: I'm tired as fuck... 
+ isAuthorized: true 
+ isVideoCapable: false
+---------------------------------------
+
+---------------------------------------
+ID: d.dijk1 
+ DisplayName:  
+ FullName: Cheatsiedoodlez :3 
+ OnlineStatus: AWAY 
+ MoodMessage: startin ta feel sick O_O :/ 
  isAuthorized: true 
  isVideoCapable: true
 ---------------------------------------
 
 ---------------------------------------
-ID: danika.dance 
+ID: echo123 
  DisplayName:  
- FullName: Danika Streppel 
- OnlineStatus: AWAY 
- MoodMessage: you are the one, the one for me and the one that makes me happy 
+ FullName: Echo / Sound Test Service 
+ OnlineStatus: ONLINE 
+ MoodMessage:  
  isAuthorized: true 
  isVideoCapable: false
 ---------------------------------------
 
+---------------------------------------
+ID: eden.man.budder 
+ DisplayName:  
+ FullName: Eden Mensinger 
+ OnlineStatus: ONLINE 
+ MoodMessage: 2015!!!!!!!!!!!! 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: frostingnl 
+ DisplayName:  
+ FullName: Jeroen 
+ OnlineStatus: ONLINE 
+ MoodMessage: "Not even the strongest army will be able to bring down the Wall. The Frozen Wall won't be able to be broken by strength nor power, only acts of kindness might help it crumble." 
+ isAuthorized: true 
+ isVideoCapable: false
+---------------------------------------
+
+---------------------------------------
+ID: hargobind.wester 
+ DisplayName:  
+ FullName: hargobind 
+ OnlineStatus: DND 
+ MoodMessage: beard. 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: icequeensabrina 
+ DisplayName:  
+ FullName:  
+ OnlineStatus: AWAY 
+ MoodMessage: Jumpstart, Hotwire this heart. 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: martijntju30 
+ DisplayName:  
+ FullName: Martijn Willemsen 
+ OnlineStatus: ONLINE 
+ MoodMessage: Ik houd van jou! Jij bent mijn speciale meisje (L) 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: nathan415k- 
+ DisplayName:  
+ FullName: Nathan Kress 
+ OnlineStatus: AWAY 
+ MoodMessage:  
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: unearthedwill 
+ DisplayName:  
+ FullName: Rin Okumumura -/-/-/- Son of Satan 
+ OnlineStatus: ONLINE 
+ MoodMessage: Love ma gurl <3 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: whiskyslut1013 
+ DisplayName:  
+ FullName: rick gerv 
+ OnlineStatus: AWAY 
+ MoodMessage: whiskyworld.us.to  is back! better then ever! 1.8 too www.spillgoodwill.com 
+ isAuthorized: true 
+ isVideoCapable: false
+---------------------------------------
+
+---------------------------------------
+ID: wowditi 
+ DisplayName:  
+ FullName: niels geuze 
+ OnlineStatus: ONLINE 
+ MoodMessage:  
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+com.skype.CommandFailedException: CALL: Action failed
+	at com.skype.Utils.checkError(Utils.java:56)
+	at com.skype.Call.setSendVideoEnabled(Call.java:443)
+	at gui.GUIFunctions$1.actionPerformed(GUIFunctions.java:52)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$200(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(Unknown Source)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue$4.run(Unknown Source)
+	at java.awt.EventQueue$4.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)

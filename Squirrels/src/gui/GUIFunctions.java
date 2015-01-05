@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,10 +25,19 @@ import game.Protocol;
 import global.Functions;
 
 public class GUIFunctions extends Functions {
+	private GUI g;
+	private SkypeLocalLibrary skype;
+	
+	public GUIFunctions(GUI g){
+		this.g = g;
+		try {
+			skype = new SkypeLocalLibrary(g);
+		} catch (SkypeException e) {
+			errorHandler(e);
+		}
+	}
 
-	private static GameHandler gh;
-
-	public static ActionListener defaultActionListener() {
+	public ActionListener defaultActionListener() {
 		return new ActionListener() {
 
 			@Override
@@ -35,12 +45,10 @@ public class GUIFunctions extends Functions {
 				boolean confirmed = confimationMessage("Are you sure you want to call this friend?");
 				if (confirmed && arg0.getSource() instanceof JButton) {
 					try {
-						SkypeLocalLibrary skype = new SkypeLocalLibrary();
 						Call c = skype.startCall(arg0.getActionCommand());
-						TangibleVirtualGame.lastCall = c;
+						g.lastCall = c;
 						System.out.println("Call created, now start the game");
-						TangibleVirtualGame.frame.dispose();
-						createFrame(gameScreen());
+						g.gf.refreshGameScreen();
 						c.setSendVideoEnabled(true);
 					} catch (SkypeException | FriendNotFoundException | exceptions.SkypeException e) {
 						errorHandler(e);
@@ -50,44 +58,54 @@ public class GUIFunctions extends Functions {
 
 		};
 	}
+	
+	public void refreshGameScreen(){
+		System.out.println("herman");
+		JPanel herman = gameScreen();
+		g.tabs.remove(2);
+		g.tabs.addTab("Game", herman);
+	}
 
-	public static Component gameScreen() {
-		Component panel = new JPanel();
-		gh = new GameHandler();
-		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
-		JPanel p = (JPanel) panel;
-		JLabel locatie = new JLabel("No location (yet)");
+	public JPanel gameScreen() {
+		JPanel tabGame = new JPanel();
+		if (GUI.lastCall == null){
+			tabGame.add(new JLabel("You need to make a call first"));
+		}
+		else {
+		tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
+		JPanel p = (JPanel) tabGame;
 		JButton startButton = new JButton("Start!!");
 		startButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				gh.sendCommand(Protocol.START, null);
+				g.gh.sendCommand(Protocol.START, null);
 			}
 			
 		});
 		p.add(startButton);
 		JButton move = new JButton("DO MOVE");
-		startButton.addActionListener(new ActionListener(){
+		move.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				gh.sendCommand(Protocol.DOMOVE, new String[]{"10"});
+				g.gh.sendCommand(Protocol.DOMOVE, new String[]{"10"});
 			}
 			
 		});
 		p.add(move);
 		JButton reset = new JButton("Reset");
-		startButton.addActionListener(new ActionListener(){
+		reset.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				gh.sendCommand(Protocol.RESET, null);
+				g.gh.sendCommand(Protocol.RESET, null);
 			}
 			
 		});
 		p.add(reset);
-		return panel;
+		}
+		return tabGame;
 	}
 
 	public static boolean confimationMessage(String message) {
@@ -129,7 +147,7 @@ public class GUIFunctions extends Functions {
 		TangibleVirtualGame.frame.setVisible(true);
 	}
 	
-	public static JButton toggleVideoButton(){
+	public JButton toggleVideoButton(){
 		JButton button = null;
 		try {
 			button = new JButton("Turn video "+returnIf(TangibleVirtualGame.lastCall.isSendVideoEnabled(), "off", "on"));
@@ -138,7 +156,7 @@ public class GUIFunctions extends Functions {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						SkypeLocalLibrary skype = new SkypeLocalLibrary();
+						SkypeLocalLibrary skype = new SkypeLocalLibrary(g);
 						skype.toggleVideo(TangibleVirtualGame.lastCall);
 					} catch (SkypeException e) {
 						errorHandler(e);
