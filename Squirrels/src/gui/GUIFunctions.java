@@ -49,7 +49,7 @@ public class GUIFunctions extends Functions {
 		};
 	}
 
-	protected static Component gameScreen() {
+	public static Component gameScreen() {
 		Component panel = new JPanel();
 		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
 		JPanel p = (JPanel) panel;

@@ -41,14 +41,14 @@ public class TangibleVirtualGame extends Functions {
 	public static void main(String[] args) {
 		try {
 			GUIFunctions.createFrame(startScreen(), JFrame.EXIT_ON_CLOSE,"Welcome");
-		} catch (RequirementsNotMetException e) {
+		} catch (RequirementsNotMetException | SkypeException e) {
 			System.out.println("Requirements are not met");
 			e.printStackTrace();
 			e.printStackTrace(logginStream);
 		}
 	}
 
-	public static Component startScreen() throws RequirementsNotMetException {
+	public static Component startScreen() throws RequirementsNotMetException, SkypeException {
 		runPreProgramChecks();
 		Component panel = new JPanel();
 		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
@@ -77,41 +77,7 @@ public class TangibleVirtualGame extends Functions {
 
 		});
 		p.add(contactSearchButton);
-		JButton waitForCall = new JButton("Wait for call.");
-		waitForCall.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "We will wait for any calls to your Skype cliënt");
-				
-				try {
-					SkypeLocalLibrary skype = new SkypeLocalLibrary();
-					boolean callReceived = false;
-
-					while(!callReceived){
-						Thread.sleep(1000);
-						if (lastCall!=null){
-							if(GUIFunctions.confimationMessage("You are being called by "+lastCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
-								callReceived = true;
-								lastCall.answer();
-								GUIFunctions.createFrame(GUIFunctions.gameScreen());
-							}
-							else {
-								lastCall.cancel();
-								lastCall = null;
-							}
-						}
-						else {
-							System.out.println("No calls yet, we will wait some longer.");
-						}
-					}
-				} catch (SkypeException | InterruptedException ex) {
-					errorHandler(ex);
-				}
-			}
-			
-		});
-		p.add(waitForCall);
+		
 		JButton moreInfoButton = new JButton("More Information");
 		moreInfoButton.addActionListener(new ActionListener(){
 
@@ -136,7 +102,8 @@ public class TangibleVirtualGame extends Functions {
 		return panel;
 	}
 
-	private static boolean runPreProgramChecks() throws RequirementsNotMetException {
+	private static boolean runPreProgramChecks() throws RequirementsNotMetException, SkypeException {
+		new SkypeLocalLibrary();
 		HashMap<String, String> errors = new HashMap<String, String>();
 		// Check if skype is installed
 		if (!Skype.isInstalled()) {

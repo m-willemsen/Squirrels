@@ -33,6 +33,7 @@ import exceptions.FriendNotFoundException;
 import game.GameHandler;
 import game.Protocol;
 import global.Functions;
+import gui.GUIFunctions;
 import gui.TangibleVirtualGame;
 
 public class SkypeLocalLibrary extends Functions {
@@ -245,7 +246,14 @@ public class SkypeLocalLibrary extends Functions {
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
 				TangibleVirtualGame.lastCall = receivedCall;
-				
+				if(GUIFunctions.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
+					receivedCall.answer();
+					GUIFunctions.createFrame(GUIFunctions.gameScreen());
+				}
+				else {
+					receivedCall.cancel();
+					TangibleVirtualGame.lastCall = null;
+				}
 				System.out.println("callReceived triggered: " + receivedCall.getPartnerId());
 			}
 
