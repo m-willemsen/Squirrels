@@ -192,6 +192,9 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public void toggleVideo(Call call) throws SkypeException {
+		if (call == null){
+			call = TangibleVirtualGame.lastCall;
+		}
 		boolean newvideoStatus = !videoStatus;
 		videoStatus = newvideoStatus;
 		call.setReceiveVideoEnabled(videoStatus);
@@ -315,6 +318,12 @@ public class SkypeLocalLibrary extends Functions {
 
 	public SkypeLocalLibrary() throws SkypeException {
 		initSkype();
+	}
+
+	public void setVideoOn(boolean status) throws SkypeException {
+		TangibleVirtualGame.lastCall.setReceiveVideoEnabled(status);
+		TangibleVirtualGame.lastCall.setSendVideoEnabled(status);
+		
 	}
 
 	/*

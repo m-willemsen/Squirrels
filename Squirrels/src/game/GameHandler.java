@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Arrays;
+
 import com.skype.SkypeException;
 
 import voip.SkypeLocalLibrary;
@@ -8,65 +10,165 @@ import gui.TangibleVirtualGame;
 
 public class GameHandler extends Functions {
 	private Protocol p;
+	/**
+	 * The last message that has been send from this client.
+	 */
 	private String messageSend;
+	/**
+	 * The current position of the pawn of the real player on this side of the application
+	 */
+	private int positionMyPawn;
+	private int finalPosition = 25;
+	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
+	private int positionOpponentPawn;
 
-	//TODO Fix that this class will handle the game
-	public GameHandler(){
-		p = new Protocol();
-		
+	// TODO Fix that this class will handle the game
+	public GameHandler() {
+		init(false);
 	}
-	
-	public GameHandler(boolean isGameStarted){
-		if (!isGameStarted){
-			sendCommand(Protocol.START, null);
-		}
+
+	public GameHandler(boolean isGameStarted) {
+		init(isGameStarted);
 	}
-	
-	public String receiveCommandsFromSkype(String commandMessage){
-		System.out.println("Command received: "+commandMessage);
+
+	public String receiveCommandsFromSkype(String commandMessage) {
+		//Create some variables
 		String command = Protocol.getCommand(commandMessage);
-		System.out.println("Command="+command);
-		System.out.println("Params: "+implode(Protocol.getParams(commandMessage)," +++ "));
-		if (Protocol.commandos.values().contains(command)){
-			boolean messageArrived = Protocol.checkMatch(commandMessage, messageSend);
-			
+		String[] params = Protocol.getParams(commandMessage);
+		
+		//Print for debugging
+		System.out.println("Command received: " + commandMessage);
+		System.out.println("Command=" + command);
+		System.out.println("Params: " + implode(params, " - "));
+		
+		// You need to fill the hashmap of the protocol, if it is not done yet
+		if (p == null) {
+			p = new Protocol();
 		}
-		if (command.equals(Protocol.DOMOVE)){
-			System.out.println("We need to move "+Protocol.getParams(commandMessage)[0]+" steps");
+		//Protocol created, now check which command is received and handle this
+		if (Protocol.commandos.values().contains(command)) {
+			//TODO handle messages that are confirmations
+			boolean messageArrived = Protocol.checkMatch(commandMessage, messageSend);
+
+		}
+		else if (command.equals(Protocol.DOMOVE)) {
+			try {
+				doMove(Integer.parseInt(Protocol.getParams(commandMessage)[0]));
+			} catch (NumberFormatException e) {
+				sendCommand(Protocol.ERROR, new String[] { commandMessage });
+			}
 			return sendAppropriateCommandBack(Protocol.DOMOVE, Protocol.getParams(commandMessage));
 		}
-		if(command.equals(Protocol.RESET)){}
-		if(command.equals(Protocol.START)){
+		else if (command.equals(Protocol.RESET)) {
+			System.out.println("Go back to the starting position");
+			reset();
+			return sendAppropriateCommandBack(command, null);
+		}
+		else if (command.equals(Protocol.START)) {
 			System.out.println("CREATE NEW GAME");
-			new GameHandler(true);
-			return sendAppropriateCommandBack(Protocol.START, null);
+			init(true);
+			return sendAppropriateCommandBack(command, null);
+		}
+		else if (command.equals(Protocol.ERROR)) {
+			System.out.println("WE RECEIVED AN ERROR");
+			String errorMessage = params[0];
+			String sendCommand = implode(Arrays.copyOfRange(params, 1, params.length), Protocol.DIVIDER);
+			System.out.println("Errormessage: "+errorMessage);
+			System.out.println("sendCommand: "+sendCommand);
+			//TODO handle those errors
+		}
+		else {
+			//This command is unknown, so send back an error.
+			sendCommand(Protocol.ERROR,new String[]{"Unkown command received"});
 		}
 		return null;
 	}
+
+	private void reset() {
+		// Set all values to their startvalue
+		positionMyPawn = 0; //own pawn
+		doMove(0); //Opponents pawn
+		
+		//TODO do this on the real game
+	}
+
+	private void init(boolean isGameStarted) {
+		if (!isGameStarted) {
+			sendCommand(Protocol.START, null);
+		}
+		reset();
+		
+		//TODO start something here, that will monitor the game
+	}
+
+	private void doMove(int newLocation) {
+		positionOpponentPawn = newLocation;
+		System.out.println("We need to move to " + newLocation);
+		//Now move the real piece to this position
+		checkFinish();
+		
+		//TODO do this on the real game
+	}
 	
-	public String sendAppropriateCommandBack(String command, String[] parameters){
+	/**
+	 * Should be triggered when the game senses that a move has been made
+	 * @param newLocation the new location of the pawn.
+	 */
+	public void playerDidMove(int newLocation){
+		positionMyPawn = newLocation;
+		System.out.println("We have moved to " + newLocation);
+		checkQuestionType();
+		checkFinish();
+	}
+
+	private void checkQuestionType() {
+		if (Arrays.binarySearch(positionsWithCurrentQuestions, positionMyPawn)>=0){
+			//The current position is not in the array, so no problem
+		}
+		else {
+			//Turn of the cam!!
+			try {
+				SkypeLocalLibrary skype = new SkypeLocalLibrary();
+				skype.setVideoOn(false);
+			} catch (SkypeException e) {
+				errorHandler(e);
+			}
+		}
+	}
+
+	private boolean checkFinish() {
+		if (positionMyPawn > finalPosition || positionOpponentPawn>finalPosition) {
+			return true;
+		}
+		return false;
+	}
+
+	public String sendAppropriateCommandBack(String command, String[] parameters) {
+		// You need to fill the hashmap of the protocol, if it is not done yet
+		if (p == null) {
+			p = new Protocol();
+		}
 		return sendCommand(Protocol.commandos.get(command), parameters);
 	}
 
 	public String sendCommand(String command, String[] parameters) {
 		try {
 			SkypeLocalLibrary skype = new SkypeLocalLibrary();
-			if (command == null){
+			if (command == null) {
 				throw new SkypeException("No command found");
 			}
-			String message = Protocol.COMMAND_PREFIX+Protocol.DIVIDER+command;
+			String message = Protocol.COMMAND_PREFIX + Protocol.DIVIDER + command;
 			if (parameters != null)
-				message+=Protocol.DIVIDER+implode(parameters, Protocol.DIVIDER);
-			System.out.println("SEND THIS: "+message);
+				message += Protocol.DIVIDER + implode(parameters, Protocol.DIVIDER);
+			System.out.println("SEND THIS: " + message);
 			skype.getChat().send(message);
 			messageSend = message;
 			return message;
 		} catch (SkypeException | exceptions.SkypeException e) {
 			errorHandler(e);
-			return Protocol.COMMAND_PREFIX+Protocol.DIVIDER+Protocol.ERROR+Protocol.DIVIDER+e.getLocalizedMessage();
+			return Protocol.COMMAND_PREFIX + Protocol.DIVIDER + Protocol.ERROR + Protocol.DIVIDER
+					+ e.getLocalizedMessage();
 		}
 	}
 
-	
-	
 }
