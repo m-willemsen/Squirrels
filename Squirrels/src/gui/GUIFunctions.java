@@ -25,6 +25,8 @@ import global.Functions;
 
 public class GUIFunctions extends Functions {
 
+	private static GameHandler gh;
+
 	public static ActionListener defaultActionListener() {
 		return new ActionListener() {
 
@@ -51,19 +53,40 @@ public class GUIFunctions extends Functions {
 
 	public static Component gameScreen() {
 		Component panel = new JPanel();
+		gh = new GameHandler();
 		panel.setSize(Frame.WIDTH, Frame.HEIGHT);
 		JPanel p = (JPanel) panel;
+		JLabel locatie = new JLabel("No location (yet)");
 		JButton startButton = new JButton("Start!!");
 		startButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GameHandler gh = new GameHandler();
 				gh.sendCommand(Protocol.START, null);
 			}
 			
 		});
 		p.add(startButton);
+		JButton move = new JButton("DO MOVE");
+		startButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				gh.sendCommand(Protocol.DOMOVE, new String[]{"10"});
+			}
+			
+		});
+		p.add(move);
+		JButton reset = new JButton("Reset");
+		startButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				gh.sendCommand(Protocol.RESET, null);
+			}
+			
+		});
+		p.add(reset);
 		return panel;
 	}
 

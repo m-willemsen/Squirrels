@@ -1,0 +1,20 @@
+---------------------------------------
+ID: live:tsonderen108 
+ DisplayName:  
+ FullName: Tim 108 
+ OnlineStatus: ONLINE 
+ MoodMessage: whiskyworld.us.to 
+ isAuthorized: true 
+ isVideoCapable: true
+---------------------------------------
+
+---------------------------------------
+ID: danika.dance 
+ DisplayName:  
+ FullName: Danika Streppel 
+ OnlineStatus: AWAY 
+ MoodMessage: you are the one, the one for me and the one that makes me happy 
+ isAuthorized: true 
+ isVideoCapable: false
+---------------------------------------
+

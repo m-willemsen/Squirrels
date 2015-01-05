@@ -212,6 +212,9 @@ public class SkypeLocalLibrary extends Functions {
 
 	public Friend[] getContacts(String skypeId) throws SkypeException, exceptions.SkypeException {
 		checkConditions();
+		if (skypeId == null || skypeId.equals("") || skypeId.equals(" ")){
+			return getContacts();
+		}
 		Friend[] contacts = Skype.getContactList().getAllFriends();
 		Arrays.sort(contacts, getContactComparator());
 		LinkedList<Friend> onlineContacts = new LinkedList<Friend>();

@@ -1,6 +1,7 @@
 package game;
 
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.skype.SkypeException;
 
@@ -21,6 +22,7 @@ public class GameHandler extends Functions {
 	private int finalPosition = 25;
 	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
 	private int positionOpponentPawn;
+	private ReentrantLock lock = new ReentrantLock();
 
 	// TODO Fix that this class will handle the game
 	public GameHandler() {
@@ -31,7 +33,7 @@ public class GameHandler extends Functions {
 		init(isGameStarted);
 	}
 
-	public String receiveCommandsFromSkype(String commandMessage) {
+	public String receiveCommandsFromSkype(String commandMessage) throws SkypeException {
 		//Create some variables
 		String command = Protocol.getCommand(commandMessage);
 		String[] params = Protocol.getParams(commandMessage);
@@ -49,7 +51,10 @@ public class GameHandler extends Functions {
 		if (Protocol.commandos.values().contains(command)) {
 			//TODO handle messages that are confirmations
 			boolean messageArrived = Protocol.checkMatch(commandMessage, messageSend);
-
+			if (messageArrived)
+				lock.unlock();
+			else
+				throw new SkypeException("Send command "+messageSend+", but received "+commandMessage);
 		}
 		else if (command.equals(Protocol.DOMOVE)) {
 			try {
@@ -153,6 +158,7 @@ public class GameHandler extends Functions {
 
 	public String sendCommand(String command, String[] parameters) {
 		try {
+			lock.lock();
 			SkypeLocalLibrary skype = new SkypeLocalLibrary();
 			if (command == null) {
 				throw new SkypeException("No command found");
