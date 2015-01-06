@@ -4,39 +4,27 @@ import global.Functions;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import org.eclipse.swt.custom.CCombo;
 
 import voip.SkypeLocalLibrary;
 
 import com.skype.Call;
 import com.skype.Friend;
-import com.skype.SkypeException;
 
 import game.GameHandler;
-import game.Protocol;
 
 public class GUI {
 	public static final String GAME_TITLE = "TangibleVirtualGame";
@@ -45,96 +33,111 @@ public class GUI {
 
 	public static Call lastCall;
 
-	private static HashMap<String, Component> friendsListOnPanel;
-	
 	public SkypeLocalLibrary skype = new SkypeLocalLibrary(this);
-	
+
 	public GameHandler gh = new GameHandler(this);
 
 	public boolean gameIsStarted = false;
-	
+
 	public GUIFunctions gf = new GUIFunctions(this);
-	
-	//screen
-	private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-	
-	//frame
+
+	// frame
 	private JFrame frame;
-	
-	//tabs
+
+	// tabs
 	protected JTabbedPane tabs;
 	private JPanel tabContacts, tabInfo, tabGame;
-	
-	
-	//contacts
+
+	// contacts
 	private JPanel searchPanel;
 	private JButton invite, search;
 	private JList<Friend> contactList;
 	private JTextField searchField;
 	private ActionListener searchListener;
-	private ListCellRenderer listRenderer;
-	
-	
-	public GUI() throws Exception{
+
+	public GUI() throws Exception {
 		frame = new JFrame(GAME_TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tabs = new JTabbedPane();
-		
-		//contacts tab
+
+		// contacts tab
 		tabContacts = new JPanel(new BorderLayout());
 		invite = new JButton("Invite");
-		
+		invite.setBackground(Color.gray);
+
 		contactList = new JList<Friend>(skype.getContacts());
-		contactList.addListSelectionListener(new ListSelectionListener(){
+		contactList.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				invite.setActionCommand(((Friend)contactList.getSelectedValue()).getId());
+				invite.setActionCommand(((Friend) contactList
+						.getSelectedValue()).getId());
 			}
-			
+
 		});
-		
-		listRenderer = contactList.getCellRenderer();
+		contactList.setCellRenderer(new ProListCellRenderer());
+		contactList.setBorder(new LineBorder(Color.white, 1));
 
 		invite.addActionListener(gf.defaultActionListener());
 		search = new JButton("Search");
+		search.setBackground(Color.gray);
 		searchField = new JTextField();
 		searchField.setColumns(30);
-		
-		searchListener = new ActionListener(){
+		searchField.setBackground(Color.lightGray);
+
+		searchListener = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
-				try{
-					contactList.setListData(skype.getContacts(searchField.getText()));
-				} catch(Exception e1){
+			public void actionPerformed(ActionEvent e) {
+				try {
+					contactList.setListData(skype.getContacts(searchField
+							.getText()));
+				} catch (Exception e1) {
 					Functions.errorHandler(e1);
 				}
-				
+
 			}
 		};
 		search.addActionListener(searchListener);
 		searchField.addActionListener(searchListener);
-		
+
 		tabContacts.add(contactList, BorderLayout.CENTER);
 		searchPanel = new JPanel(new BorderLayout());
 		searchPanel.add(invite, BorderLayout.WEST);
 		searchPanel.add(searchField, BorderLayout.CENTER);
 		searchPanel.add(search, BorderLayout.EAST);
 		tabContacts.add(searchPanel, BorderLayout.NORTH);
-		
-		
-		//info tab
+
+		// info tab
 		tabInfo = new JPanel();
-		
-		//game tab
+
+		// game tab
 		tabGame = gf.gameScreen();
-		
+
 		tabs.addTab("Contacts", tabContacts);
 		tabs.addTab("Info", tabInfo);
 		tabs.addTab("Game", tabGame);
 		frame.add(tabs);
-		frame.setSize(600,480);
+		frame.setSize(600, 480);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
+	}
+}
+
+class ProListCellRenderer extends DefaultListCellRenderer {
+	@Override
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean cellHasFocus) {
+		Component c = super.getListCellRendererComponent(list, value, index,
+				isSelected, cellHasFocus);
+		if (isSelected){
+			c.setForeground(Color.white);
+			c.setBackground(Color.black);
+		}
+		if (index % 2 == 0) {
+			c.setBackground(Color.gray);
+		} else {
+			c.setBackground(Color.lightGray);
+		}
+		return c;
 	}
 }
