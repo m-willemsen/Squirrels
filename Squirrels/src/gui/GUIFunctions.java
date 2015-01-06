@@ -26,12 +26,13 @@ import global.Functions;
 
 public class GUIFunctions extends Functions {
 	private GUI g;
-	private SkypeLocalLibrary skype;
 
 	public GUIFunctions(GUI g) {
 		this.g = g;
 		try {
-			skype = new SkypeLocalLibrary(g);
+			if (g.skype==null){
+				g.skype = new SkypeLocalLibrary(g);
+			}
 		} catch (SkypeException e) {
 			errorHandler(e);
 		}
@@ -45,7 +46,7 @@ public class GUIFunctions extends Functions {
 				boolean confirmed = confimationMessage("Are you sure you want to call this friend?");
 				if (confirmed && arg0.getSource() instanceof JButton) {
 					try {
-						Call c = skype.startCall(arg0.getActionCommand());
+						Call c = g.skype.startCall(arg0.getActionCommand());
 						g.lastCall = c;
 						System.out.println("Call created, now start the game");
 						g.gf.refreshGameScreen();
@@ -71,10 +72,6 @@ public class GUIFunctions extends Functions {
 		if (GUI.lastCall == null) {
 			tabGame.add(new JLabel("You need to make a call first"));
 		} else {
-			if (g.gh == null){
-				System.out.println("Create new gameHandler");
-				g.gh = new GameHandler(g);
-			}
 			tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
 			JPanel p = (JPanel) tabGame;
 			JButton startButton = new JButton("Start!!");

@@ -27,8 +27,6 @@ public class GameHandler extends Functions {
 	private ReentrantLock lock = new ReentrantLock();
 	
 	private GUI g;
-	
-	public boolean gameIsStarted = false;
 
 	// TODO Fix that this class will handle the game
 	public GameHandler(GUI g) {
@@ -74,7 +72,7 @@ public class GameHandler extends Functions {
 		}
 		else if (command.equals(Protocol.START)) {
 			System.out.println("CREATE NEW GAME");
-			gameIsStarted = true;
+			g.gameIsStarted = true;
 			init();
 			return sendAppropriateCommandBack(command, null);
 		}
@@ -102,8 +100,8 @@ public class GameHandler extends Functions {
 	}
 
 	private void init() {
-		System.out.println("gameIsStarted: "+gameIsStarted);
-		if (!gameIsStarted) {
+		System.out.println("gameIsStarted: "+g.gameIsStarted);
+		if (!g.gameIsStarted) {
 			sendCommand(Protocol.START, null);
 		}
 		g.gf.refreshGameScreen();
@@ -173,7 +171,7 @@ public class GameHandler extends Functions {
 				message += Protocol.DIVIDER + implode(parameters, Protocol.DIVIDER);
 			if (command.equals(Protocol.START)){
 				System.out.println("Set game is started to true");
-				gameIsStarted=true;
+				g.gameIsStarted=true;
 			}
 			System.out.println("SEND THIS: " + message);
 			g.skype.getChat().send(message);

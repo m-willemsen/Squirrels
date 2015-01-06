@@ -40,7 +40,6 @@ import gui.TangibleVirtualGame;
 public class SkypeLocalLibrary extends Functions {
 	private boolean videoStatus = true;
 	private ConnectorListener listener;
-	private Application app;
 	private GUI g;
 
 	public Friend[] getContacts() throws SkypeException, exceptions.SkypeException {
