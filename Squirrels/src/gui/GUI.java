@@ -3,6 +3,7 @@ package gui;
 import global.Functions;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -64,8 +66,9 @@ public class GUI {
 	//contacts
 	private JPanel searchPanel;
 	private JButton invite, search;
-	private JList contactList;
+	private JList<Friend> contactList;
 	private JTextField searchField;
+	private ActionListener searchListener;
 	
 	
 	public GUI() throws Exception{
@@ -75,9 +78,8 @@ public class GUI {
 		
 		//contacts tab
 		tabContacts = new JPanel(new BorderLayout());
-		GridBagConstraints c = new GridBagConstraints();
 		invite = new JButton("Invite");
-		contactList = new JList(skype.getContacts());
+		contactList = new JList<Friend>(skype.getContacts());
 		contactList.addListSelectionListener(new ListSelectionListener(){
 
 			@Override
@@ -92,7 +94,7 @@ public class GUI {
 		searchField = new JTextField();
 		searchField.setColumns(30);
 		
-		search.addActionListener(new ActionListener(){
+		searchListener = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
 				try{
@@ -102,20 +104,14 @@ public class GUI {
 				}
 				
 			}
-		});
+		};
+		search.addActionListener(searchListener);
+		searchField.addActionListener(searchListener);
 		
-		c.gridwidth = 3;
-		c.gridy = 1;
-		c.fill = 1;
 		tabContacts.add(contactList, BorderLayout.CENTER);
-		c.gridwidth = 1;
-		c.gridy = 0;
-		c.gridx = 0;
 		searchPanel = new JPanel(new BorderLayout());
 		searchPanel.add(invite, BorderLayout.WEST);
-		c.gridx = 1;
 		searchPanel.add(searchField, BorderLayout.CENTER);
-		c.gridx = 2;
 		searchPanel.add(search, BorderLayout.EAST);
 		tabContacts.add(searchPanel, BorderLayout.NORTH);
 		
