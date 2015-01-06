@@ -116,7 +116,7 @@ public class GameHandler extends Functions {
 		System.out.println("We need to move to " + newLocation);
 		//Now move the real piece to this position
 		checkFinish();
-		
+		myTurn = true;
 		//TODO do this on the real game
 	}
 	
@@ -132,6 +132,7 @@ public class GameHandler extends Functions {
 		checkFinish();
 		myTurn = false;
 		sendCommand(Protocol.DOMOVE, new String[]{Integer.toString(newLocation)});
+		g.gf.refreshGameScreen();
 		}
 		else {
 			JOptionPane.showMessageDialog(g.frame, "You made a move, but it was not your turn. Please put your pawn back at position "+positionMyPawn+".", "An error occured", JOptionPane.ERROR_MESSAGE);
