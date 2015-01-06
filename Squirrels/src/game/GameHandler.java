@@ -31,7 +31,6 @@ public class GameHandler extends Functions {
 	// TODO Fix that this class will handle the game
 	public GameHandler(GUI g) {
 		this.g = g;
-		init();
 	}
 
 	public String receiveCommandsFromSkype(String commandMessage) throws SkypeException {
@@ -99,13 +98,13 @@ public class GameHandler extends Functions {
 		//TODO do this on the real game
 	}
 
-	private void init() {
+	public void init() {
 		System.out.println("gameIsStarted: "+g.gameIsStarted);
 		if (!g.gameIsStarted) {
 			sendCommand(Protocol.START, null);
+			g.gf.refreshGameScreen();
+			reset();
 		}
-		g.gf.refreshGameScreen();
-		reset();
 		
 		//TODO start something here, that will monitor the game
 	}
@@ -172,6 +171,7 @@ public class GameHandler extends Functions {
 			if (command.equals(Protocol.START)){
 				System.out.println("Set game is started to true");
 				g.gameIsStarted=true;
+				init();
 			}
 			System.out.println("SEND THIS: " + message);
 			g.skype.getChat().send(message);

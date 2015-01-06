@@ -49,6 +49,8 @@ public class GUIFunctions extends Functions {
 						Call c = g.skype.startCall(arg0.getActionCommand());
 						g.lastCall = c;
 						System.out.println("Call created, now start the game");
+						if (c.getStatus().equals(Call.Status.INPROGRESS))
+						g.gh.init();
 						g.gf.refreshGameScreen();
 						c.setSendVideoEnabled(true);
 					} catch (SkypeException | FriendNotFoundException | exceptions.SkypeException e) {
