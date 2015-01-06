@@ -26,9 +26,10 @@ public class GameHandler extends Functions {
 	private int finalPosition = 25;
 	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
 	private int positionOpponentPawn;
-	private ReentrantLock lock = new ReentrantLock();
+	//private ReentrantLock lock = new ReentrantLock();
 	
 	private GUI g;
+	private boolean myTurn;
 
 	public GameHandler(GUI g) {
 		this.g = g;
@@ -51,9 +52,7 @@ public class GameHandler extends Functions {
 		//Protocol created, now check which command is received and handle this
 		if (Protocol.commandos.values().contains(command)) {
 			boolean messageArrived = Protocol.checkMatch(commandMessage, messageSend);
-			if (messageArrived)
-				lock.unlock();
-			else
+			if (!messageArrived)
 				throw new SkypeException("Send command "+messageSend+", but received "+commandMessage);
 		}
 		else if (command.equals(Protocol.DOMOVE)) {
@@ -94,11 +93,10 @@ public class GameHandler extends Functions {
 		return null;
 	}
 
-	private void reset() {
+	public void reset() {
 		// Set all values to their startvalue
 		positionMyPawn = 0; //own pawn
 		doMove(0); //Opponents pawn
-		System.out.println("RESET THE GAME NOW");
 	}
 
 	public void init() {
@@ -126,10 +124,16 @@ public class GameHandler extends Functions {
 	 * @param newLocation the new location of the pawn.
 	 */
 	public void playerDidMove(int newLocation){
+		if (myTurn || newLocation==positionMyPawn){
 		positionMyPawn = newLocation;
 		System.out.println("We have moved to " + newLocation);
 		checkQuestionType();
 		checkFinish();
+		myTurn = false;
+		}
+		else {
+			JOptionPane.showMessageDialog(g.frame, "You made a move, but it was not your turn. Please put your pawn back at position "+positionMyPawn+".", "An error occured", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void checkQuestionType() {
@@ -164,7 +168,7 @@ public class GameHandler extends Functions {
 
 	public String sendCommand(String command, String[] parameters) {
 		try {
-			lock.lock();
+			//lock.lock();
 			if (command == null) {
 				throw new SkypeException("No command found");
 			}
@@ -185,6 +189,10 @@ public class GameHandler extends Functions {
 			return Protocol.COMMAND_PREFIX + Protocol.DIVIDER + Protocol.ERROR + Protocol.DIVIDER
 					+ e.getLocalizedMessage();
 		}
+	}
+	
+	public boolean isItMyTurn(){
+		return myTurn;
 	}
 
 }

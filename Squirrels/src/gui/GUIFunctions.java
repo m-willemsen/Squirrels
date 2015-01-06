@@ -109,6 +109,7 @@ public class GUIFunctions extends Functions {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					g.gh.reset();
 					g.gh.sendCommand(Protocol.RESET, null);
 				}
 

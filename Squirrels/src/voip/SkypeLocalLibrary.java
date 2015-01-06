@@ -252,7 +252,8 @@ public class SkypeLocalLibrary extends Functions {
 				g.lastCall = receivedCall;
 				if(GUIFunctions.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 					receivedCall.answer();
-					GUIFunctions.createFrame(g.gf.gameScreen());
+					g.gf.refreshGameScreen();
+					//GUIFunctions.createFrame(g.gf.gameScreen());
 				}
 				else {
 					receivedCall.cancel();
