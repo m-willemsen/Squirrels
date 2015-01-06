@@ -22,7 +22,7 @@ public class GameHandler extends Functions {
 	/**
 	 * The current position of the pawn of the real player on this side of the application
 	 */
-	private int positionMyPawn;
+	public int positionMyPawn;
 	private int finalPosition = 25;
 	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
 	private int positionOpponentPawn;

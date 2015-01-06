@@ -69,9 +69,15 @@ public class GUIFunctions extends Functions {
 	public void refreshGameScreen() {
 		System.out.println("herman");
 		JPanel herman = gameScreen();
+		try{
 		g.tabs.remove(2);
 		g.tabs.addTab("Game", herman);
 		g.tabs.setSelectedIndex(2);
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			System.out.println("####################");
+			refreshGameScreen();
+		}
 	}
 
 	public JPanel gameScreen() {
@@ -109,7 +115,7 @@ public class GUIFunctions extends Functions {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					g.gh.playerDidMove(10);
+					g.gh.playerDidMove(g.gh.positionMyPawn+1);
 					//g.gh.sendCommand(Protocol.DOMOVE, new String[] { "10" });
 				}
 
