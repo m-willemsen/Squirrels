@@ -117,6 +117,7 @@ public class GameHandler extends Functions {
 		//Now move the real piece to this position
 		checkFinish();
 		myTurn = true;
+		g.gf.refreshGameScreen();
 		//TODO do this on the real game
 	}
 	
@@ -128,7 +129,7 @@ public class GameHandler extends Functions {
 		if (myTurn || newLocation==positionMyPawn){
 		positionMyPawn = newLocation;
 		System.out.println("We have moved to " + newLocation);
-		checkQuestionType();
+		//checkQuestionType();
 		checkFinish();
 		myTurn = false;
 		sendCommand(Protocol.DOMOVE, new String[]{Integer.toString(newLocation)});
@@ -139,7 +140,7 @@ public class GameHandler extends Functions {
 		}
 	}
 
-	private void checkQuestionType() {
+	/*private void checkQuestionType() {
 		if (Arrays.binarySearch(positionsWithCurrentQuestions, positionMyPawn)>=0){
 			//The current position is not in the array, so no problem
 		}
@@ -152,7 +153,7 @@ public class GameHandler extends Functions {
 				errorHandler(e);
 			}
 		}
-	}
+	}*/
 
 	private boolean checkFinish() {
 		if (positionMyPawn > finalPosition || positionOpponentPawn>finalPosition) {
