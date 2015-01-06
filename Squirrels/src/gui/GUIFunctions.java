@@ -98,7 +98,7 @@ public class GUIFunctions extends Functions {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					g.gh.sendCommand(Protocol.START, null);
+					g.gh.init();
 				}
 
 			});
@@ -109,9 +109,8 @@ public class GUIFunctions extends Functions {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					System.out.println(g);
-					System.out.println(g.gh);
-					g.gh.sendCommand(Protocol.DOMOVE, new String[] { "10" });
+					g.gh.playerDidMove(10);
+					//g.gh.sendCommand(Protocol.DOMOVE, new String[] { "10" });
 				}
 
 			});

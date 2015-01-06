@@ -131,6 +131,7 @@ public class GameHandler extends Functions {
 		checkQuestionType();
 		checkFinish();
 		myTurn = false;
+		sendCommand(Protocol.DOMOVE, new String[]{Integer.toString(newLocation)});
 		}
 		else {
 			JOptionPane.showMessageDialog(g.frame, "You made a move, but it was not your turn. Please put your pawn back at position "+positionMyPawn+".", "An error occured", JOptionPane.ERROR_MESSAGE);
