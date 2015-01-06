@@ -92,7 +92,7 @@ public class GUI {
 					contactList.setListData(skype.getContacts(searchField
 							.getText()));
 				} catch (Exception e1) {
-					Functions.errorHandler(e1);
+					e1.printStackTrace();
 				}
 
 			}

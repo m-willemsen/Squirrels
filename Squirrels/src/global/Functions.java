@@ -1,6 +1,6 @@
 package global;
 
-import gui.TangibleVirtualGame;
+import gui.GUI;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -20,16 +20,20 @@ import javax.swing.JOptionPane;
 
 public class Functions {
 	// First define some constants
-	public static PrintStream logginStream = getLogginStream("log.txt");
+	public PrintStream logginStream = getLogginStream("log.txt");
+	private GUI g;
 
+	public Functions(GUI g){
+		this.g = g;
+	}
 	// Now define some functions that can be used in all other classes
 	/**
 	 * This function handles all Exceptions. If there is a catch, use this function. It creates a popup field with the error. It also places the whole error in the log.
 	 * @param e The error
 	 */
-	public static void errorHandler(Exception e) {
-		if (TangibleVirtualGame.frame != null)
-			JOptionPane.showMessageDialog(TangibleVirtualGame.frame, e.getMessage(), "An error occurred",
+	public void errorHandler(Exception e) {
+		if (g.frame != null)
+			JOptionPane.showMessageDialog(g.frame, e.getMessage(), "An error occurred",
 					JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace(logginStream);
 	}
@@ -39,7 +43,7 @@ public class Functions {
 	 * @param fileName the file where the stream should go to
 	 * @return the stream, on which you can print errors. On default it will return System.out
 	 */
-	public static PrintStream getLogginStream(String fileName) {
+	public PrintStream getLogginStream(String fileName) {
 		PrintStream stream = System.out;
 		try {
 			File file = new File(fileName);
@@ -86,7 +90,7 @@ public class Functions {
 	 * Open a website
 	 * @param url url to the website that should be opened.
 	 */
-	public static void openWebsite(String url) {
+	public void openWebsite(String url) {
 		try {
 			URI uri = new URI(url);
 			Desktop dt = Desktop.getDesktop();

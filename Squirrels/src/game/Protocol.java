@@ -1,6 +1,7 @@
 package game;
 
 import global.Functions;
+import gui.GUI;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +49,8 @@ public class Protocol extends Functions {
 			CONFIRM_ANSWER+kvd+CONFIRM_ANSWER+"ED"+ed+
 			RESET+kvd+RESET+"ED"+ed;
 	
-	public Protocol(){
+	public Protocol(GUI g){
+		super(g);
 		fillCommandoHashMap();
 	}
 

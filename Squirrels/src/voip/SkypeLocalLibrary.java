@@ -249,7 +249,7 @@ public class SkypeLocalLibrary extends Functions {
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
 				g.lastCall = receivedCall;
-				if(GUIFunctions.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
+				if(g.gf.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 					receivedCall.answer();
 					g.gf.refreshGameScreen();
 					g.gh.init();
@@ -329,6 +329,7 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public SkypeLocalLibrary(GUI g) throws SkypeException {
+		super(g);
 		initSkype();
 		this.g = g;
 	}

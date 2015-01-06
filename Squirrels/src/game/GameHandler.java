@@ -11,7 +11,6 @@ import voip.SkypeLocalLibrary;
 import global.Functions;
 import gui.GUI;
 import gui.GUIFunctions;
-import gui.TangibleVirtualGame;
 
 public class GameHandler extends Functions {
 	private Protocol p;
@@ -32,6 +31,7 @@ public class GameHandler extends Functions {
 	private boolean myTurn;
 
 	public GameHandler(GUI g) {
+		super(g);
 		this.g = g;
 	}
 
@@ -47,7 +47,7 @@ public class GameHandler extends Functions {
 		
 		// You need to fill the hashmap of the protocol, if it is not done yet
 		if (p == null) {
-			p = new Protocol();
+			p = new Protocol(g);
 		}
 		//Protocol created, now check which command is received and handle this
 		if (Protocol.commandos.values().contains(command)) {
@@ -165,7 +165,7 @@ public class GameHandler extends Functions {
 	public String sendAppropriateCommandBack(String command, String[] parameters) {
 		// You need to fill the hashmap of the protocol, if it is not done yet
 		if (p == null) {
-			p = new Protocol();
+			p = new Protocol(g);
 		}
 		return sendCommand(Protocol.commandos.get(command), parameters);
 	}

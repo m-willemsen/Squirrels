@@ -32,6 +32,7 @@ public class GUIFunctions extends Functions {
 	private GUI g;
 
 	public GUIFunctions(GUI g) {
+		super(g);
 		this.g = g;
 		try {
 			if (g.skype==null){
@@ -136,58 +137,22 @@ public class GUIFunctions extends Functions {
 		return tabGame;
 	}
 
-	public static boolean confimationMessage(String message) {
-		return JOptionPane.showConfirmDialog(TangibleVirtualGame.frame, message) == JOptionPane.OK_OPTION;
-	}
-
-	public static void createFrame(Component panel) {
-		createFrame(panel, JFrame.EXIT_ON_CLOSE, null);
-	}
-
-	public static void createFrame(Component panel, int defCloseOperation) {
-		createFrame(panel, defCloseOperation, null);
-	}
-
-	public static void createFrame(Component panel, int defCloseOperation, String title) {
-		// Start by creating a frame
-		TangibleVirtualGame.frame = new JFrame(TangibleVirtualGame.GAME_TITLE);
-		// Create a title (if needed)
-		if (title != null) {
-			JPanel titlePanel = new JPanel();
-			JLabel titleLabel = new JLabel(title);
-			System.out.println("titleLabel.getText()=" + titleLabel.getText());
-			titlePanel.setSize(TangibleVirtualGame.frame.getWidth(), 150);
-			titlePanel.setAlignmentX(Frame.CENTER_ALIGNMENT);
-			titlePanel.setAlignmentY(Frame.CENTER_ALIGNMENT);
-			titlePanel.setBackground(Color.RED);
-			titlePanel.add(titleLabel);
-
-			titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
-
-			TangibleVirtualGame.frame.add(titlePanel, BorderLayout.PAGE_START);
-		}
-		// Create a panel
-		panel.setVisible(true);
-		panel.setEnabled(true);
-		// Put it into a frame
-		TangibleVirtualGame.frame.add(panel);
-		TangibleVirtualGame.frame.setDefaultCloseOperation(defCloseOperation);
-		TangibleVirtualGame.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		TangibleVirtualGame.frame.setVisible(true);
+	public boolean confimationMessage(String message) {
+		return JOptionPane.showConfirmDialog(g.frame, message) == JOptionPane.OK_OPTION;
 	}
 
 	public JButton toggleVideoButton() {
 		JButton button = null;
 		try {
 			button = new JButton("Turn video "
-					+ returnIf(TangibleVirtualGame.lastCall.isSendVideoEnabled(), "off", "on"));
+					+ returnIf(g.lastCall.isSendVideoEnabled(), "off", "on"));
 			button.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
 						SkypeLocalLibrary skype = new SkypeLocalLibrary(g);
-						skype.toggleVideo(TangibleVirtualGame.lastCall);
+						skype.toggleVideo(g.lastCall);
 					} catch (SkypeException e) {
 						errorHandler(e);
 					}

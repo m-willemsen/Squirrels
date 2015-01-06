@@ -7,13 +7,20 @@ import gui.GUI;
 import gui.GUIFunctions;
 
 public class Main extends Functions{
+	public Main(GUI g) {
+		super(g);
+	}
+
+	private static GUI g;
+
 	public static void main(String[] args) {
 		try {
-			GUI g = new GUI();
+			g = new GUI();
 		} catch (Exception e) {
-			errorHandler(e);
+			Functions f = new Functions(g);
+			f.errorHandler(e);
 			e.printStackTrace();
-			e.printStackTrace(logginStream);
+			e.printStackTrace(f.logginStream);
 		}
 	}
 }
