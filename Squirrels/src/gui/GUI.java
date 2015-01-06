@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -71,6 +72,7 @@ public class GUI {
 	private JList<Friend> contactList;
 	private JTextField searchField;
 	private ActionListener searchListener;
+	private ListCellRenderer listRenderer;
 	
 	
 	public GUI() throws Exception{
@@ -81,6 +83,7 @@ public class GUI {
 		//contacts tab
 		tabContacts = new JPanel(new BorderLayout());
 		invite = new JButton("Invite");
+		
 		contactList = new JList<Friend>(skype.getContacts());
 		contactList.addListSelectionListener(new ListSelectionListener(){
 
@@ -91,6 +94,8 @@ public class GUI {
 			
 		});
 		
+		listRenderer = contactList.getCellRenderer();
+
 		invite.addActionListener(gf.defaultActionListener());
 		search = new JButton("Search");
 		searchField = new JTextField();
