@@ -27,8 +27,8 @@ import global.Functions;
 public class GUIFunctions extends Functions {
 	private GUI g;
 	private SkypeLocalLibrary skype;
-	
-	public GUIFunctions(GUI g){
+
+	public GUIFunctions(GUI g) {
 		this.g = g;
 		try {
 			skype = new SkypeLocalLibrary(g);
@@ -58,8 +58,8 @@ public class GUIFunctions extends Functions {
 
 		};
 	}
-	
-	public void refreshGameScreen(){
+
+	public void refreshGameScreen() {
 		System.out.println("herman");
 		JPanel herman = gameScreen();
 		g.tabs.remove(2);
@@ -68,42 +68,47 @@ public class GUIFunctions extends Functions {
 
 	public JPanel gameScreen() {
 		JPanel tabGame = new JPanel();
-		if (GUI.lastCall == null){
+		if (GUI.lastCall == null) {
 			tabGame.add(new JLabel("You need to make a call first"));
-		}
-		else {
-		tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
-		JPanel p = (JPanel) tabGame;
-		JButton startButton = new JButton("Start!!");
-		startButton.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				g.gh.sendCommand(Protocol.START, null);
+		} else {
+			if (g.gh == null){
+				System.out.println("Create new gameHandler");
+				g.gh = new GameHandler(g);
 			}
-			
-		});
-		p.add(startButton);
-		JButton move = new JButton("DO MOVE");
-		move.addActionListener(new ActionListener(){
+			tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
+			JPanel p = (JPanel) tabGame;
+			JButton startButton = new JButton("Start!!");
+			startButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				g.gh.sendCommand(Protocol.DOMOVE, new String[]{"10"});
-			}
-			
-		});
-		p.add(move);
-		JButton reset = new JButton("Reset");
-		reset.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					g.gh.sendCommand(Protocol.START, null);
+				}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				g.gh.sendCommand(Protocol.RESET, null);
-			}
-			
-		});
-		p.add(reset);
+			});
+			p.add(startButton);
+			JButton move = new JButton("DO MOVE");
+			move.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					System.out.println(g);
+					System.out.println(g.gh);
+					g.gh.sendCommand(Protocol.DOMOVE, new String[] { "10" });
+				}
+
+			});
+			p.add(move);
+			JButton reset = new JButton("Reset");
+			reset.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					g.gh.sendCommand(Protocol.RESET, null);
+				}
+
+			});
+			p.add(reset);
 		}
 		return tabGame;
 	}
@@ -111,10 +116,11 @@ public class GUIFunctions extends Functions {
 	public static boolean confimationMessage(String message) {
 		return JOptionPane.showConfirmDialog(TangibleVirtualGame.frame, message) == JOptionPane.OK_OPTION;
 	}
-	
+
 	public static void createFrame(Component panel) {
 		createFrame(panel, JFrame.EXIT_ON_CLOSE, null);
 	}
+
 	public static void createFrame(Component panel, int defCloseOperation) {
 		createFrame(panel, defCloseOperation, null);
 	}
@@ -123,18 +129,18 @@ public class GUIFunctions extends Functions {
 		// Start by creating a frame
 		TangibleVirtualGame.frame = new JFrame(TangibleVirtualGame.GAME_TITLE);
 		// Create a title (if needed)
-		if(title != null){
+		if (title != null) {
 			JPanel titlePanel = new JPanel();
 			JLabel titleLabel = new JLabel(title);
-			System.out.println("titleLabel.getText()="+titleLabel.getText());
+			System.out.println("titleLabel.getText()=" + titleLabel.getText());
 			titlePanel.setSize(TangibleVirtualGame.frame.getWidth(), 150);
 			titlePanel.setAlignmentX(Frame.CENTER_ALIGNMENT);
 			titlePanel.setAlignmentY(Frame.CENTER_ALIGNMENT);
 			titlePanel.setBackground(Color.RED);
 			titlePanel.add(titleLabel);
-			
+
 			titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
-			
+
 			TangibleVirtualGame.frame.add(titlePanel, BorderLayout.PAGE_START);
 		}
 		// Create a panel
@@ -146,12 +152,13 @@ public class GUIFunctions extends Functions {
 		TangibleVirtualGame.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		TangibleVirtualGame.frame.setVisible(true);
 	}
-	
-	public JButton toggleVideoButton(){
+
+	public JButton toggleVideoButton() {
 		JButton button = null;
 		try {
-			button = new JButton("Turn video "+returnIf(TangibleVirtualGame.lastCall.isSendVideoEnabled(), "off", "on"));
-			button.addActionListener(new ActionListener(){
+			button = new JButton("Turn video "
+					+ returnIf(TangibleVirtualGame.lastCall.isSendVideoEnabled(), "off", "on"));
+			button.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -162,7 +169,7 @@ public class GUIFunctions extends Functions {
 						errorHandler(e);
 					}
 				}
-				
+
 			});
 		} catch (SkypeException e) {
 			errorHandler(e);

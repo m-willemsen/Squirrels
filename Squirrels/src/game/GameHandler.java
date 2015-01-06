@@ -27,15 +27,13 @@ public class GameHandler extends Functions {
 	private ReentrantLock lock = new ReentrantLock();
 	
 	private GUI g;
+	
+	public boolean gameIsStarted = false;
 
 	// TODO Fix that this class will handle the game
 	public GameHandler(GUI g) {
-		init(false);
 		this.g = g;
-	}
-
-	public GameHandler(boolean isGameStarted) {
-		init(isGameStarted);
+		init();
 	}
 
 	public String receiveCommandsFromSkype(String commandMessage) throws SkypeException {
@@ -76,7 +74,8 @@ public class GameHandler extends Functions {
 		}
 		else if (command.equals(Protocol.START)) {
 			System.out.println("CREATE NEW GAME");
-			init(true);
+			gameIsStarted = true;
+			init();
 			return sendAppropriateCommandBack(command, null);
 		}
 		else if (command.equals(Protocol.ERROR)) {
@@ -102,8 +101,9 @@ public class GameHandler extends Functions {
 		//TODO do this on the real game
 	}
 
-	private void init(boolean isGameStarted) {
-		if (!isGameStarted) {
+	private void init() {
+		System.out.println("gameIsStarted: "+gameIsStarted);
+		if (!gameIsStarted) {
 			sendCommand(Protocol.START, null);
 		}
 		g.gf.refreshGameScreen();
@@ -171,10 +171,11 @@ public class GameHandler extends Functions {
 			String message = Protocol.COMMAND_PREFIX + Protocol.DIVIDER + command;
 			if (parameters != null)
 				message += Protocol.DIVIDER + implode(parameters, Protocol.DIVIDER);
+			if (command.equals(Protocol.START)){
+				System.out.println("Set game is started to true");
+				gameIsStarted=true;
+			}
 			System.out.println("SEND THIS: " + message);
-			System.out.println(g);
-			System.out.println(g.skype);
-			System.out.println(g.skype.getChat());
 			g.skype.getChat().send(message);
 			messageSend = message;
 			return message;

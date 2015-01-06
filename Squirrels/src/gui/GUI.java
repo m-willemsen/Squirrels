@@ -49,6 +49,8 @@ public class GUI {
 	public SkypeLocalLibrary skype = new SkypeLocalLibrary(this);
 	
 	public GameHandler gh;
+
+	public boolean gameIsStarted = false;
 	
 	public GUIFunctions gf = new GUIFunctions(this);
 	
