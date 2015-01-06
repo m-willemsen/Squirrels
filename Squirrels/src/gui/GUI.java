@@ -2,10 +2,14 @@ package gui;
 
 import global.Functions;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -46,6 +50,9 @@ public class GUI {
 	
 	public GUIFunctions gf = new GUIFunctions(this);
 	
+	//screen
+	private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	
 	//frame
 	private JFrame frame;
 	
@@ -55,6 +62,7 @@ public class GUI {
 	
 	
 	//contacts
+	private JPanel searchPanel;
 	private JButton invite, search;
 	private JList contactList;
 	private JTextField searchField;
@@ -66,7 +74,7 @@ public class GUI {
 		tabs = new JTabbedPane();
 		
 		//contacts tab
-		tabContacts = new JPanel(new GridBagLayout());
+		tabContacts = new JPanel(new BorderLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		invite = new JButton("Invite");
 		contactList = new JList(skype.getContacts());
@@ -83,6 +91,7 @@ public class GUI {
 		search = new JButton("Search");
 		searchField = new JTextField();
 		searchField.setColumns(30);
+		
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -94,20 +103,21 @@ public class GUI {
 				
 			}
 		});
-
+		
 		c.gridwidth = 3;
 		c.gridy = 1;
 		c.fill = 1;
-		tabContacts.add(contactList, c);
-		c.fill = 0;
+		tabContacts.add(contactList, BorderLayout.CENTER);
 		c.gridwidth = 1;
 		c.gridy = 0;
 		c.gridx = 0;
-		tabContacts.add(invite, c);
+		searchPanel = new JPanel(new BorderLayout());
+		searchPanel.add(invite, BorderLayout.WEST);
 		c.gridx = 1;
-		tabContacts.add(searchField);
+		searchPanel.add(searchField, BorderLayout.CENTER);
 		c.gridx = 2;
-		tabContacts.add(search,c);
+		searchPanel.add(search, BorderLayout.EAST);
+		tabContacts.add(searchPanel, BorderLayout.NORTH);
 		
 		
 		//info tab
