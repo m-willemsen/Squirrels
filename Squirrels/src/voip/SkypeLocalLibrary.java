@@ -314,7 +314,7 @@ public class SkypeLocalLibrary extends Functions {
 
 	protected void sendMessageToGame(ChatMessage receivedChatMessage) {
 		try {
-			if (TangibleVirtualGame.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(TangibleVirtualGame.lastCall.getPartnerId())){
+			if (g.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(g.lastCall.getPartnerId())){
 				g.gh.receiveCommandsFromSkype(receivedChatMessage.getContent());
 			}
 		} catch (SkypeException e) {

@@ -3,6 +3,8 @@ package game;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.JOptionPane;
+
 import com.skype.SkypeException;
 
 import voip.SkypeLocalLibrary;
@@ -28,7 +30,6 @@ public class GameHandler extends Functions {
 	
 	private GUI g;
 
-	// TODO Fix that this class will handle the game
 	public GameHandler(GUI g) {
 		this.g = g;
 	}
@@ -49,7 +50,6 @@ public class GameHandler extends Functions {
 		}
 		//Protocol created, now check which command is received and handle this
 		if (Protocol.commandos.values().contains(command)) {
-			//TODO handle messages that are confirmations
 			boolean messageArrived = Protocol.checkMatch(commandMessage, messageSend);
 			if (messageArrived)
 				lock.unlock();
@@ -77,11 +77,15 @@ public class GameHandler extends Functions {
 		}
 		else if (command.equals(Protocol.ERROR)) {
 			System.out.println("WE RECEIVED AN ERROR");
-			String errorMessage = params[0];
+			String errorMessage = "No errormessage available";
+			if (params.length>0){
+				errorMessage = params[0];
+			}
 			String sendCommand = implode(Arrays.copyOfRange(params, 1, params.length), Protocol.DIVIDER);
 			System.out.println("Errormessage: "+errorMessage);
 			System.out.println("sendCommand: "+sendCommand);
-			//TODO handle those errors
+			
+			JOptionPane.showMessageDialog(g.frame, "An error occurred:\n The error message: "+errorMessage+".\n This error occurred during sending this command: "+sendCommand, "An error occurred", JOptionPane.ERROR_MESSAGE);
 		}
 		else {
 			//This command is unknown, so send back an error.
@@ -94,8 +98,7 @@ public class GameHandler extends Functions {
 		// Set all values to their startvalue
 		positionMyPawn = 0; //own pawn
 		doMove(0); //Opponents pawn
-		
-		//TODO do this on the real game
+		System.out.println("RESET THE GAME NOW");
 	}
 
 	public void init() {

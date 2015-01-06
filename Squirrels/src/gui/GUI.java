@@ -42,7 +42,7 @@ public class GUI {
 	public GUIFunctions gf = new GUIFunctions(this);
 
 	// frame
-	private JFrame frame;
+	public JFrame frame;
 
 	// tabs
 	protected JTabbedPane tabs;
