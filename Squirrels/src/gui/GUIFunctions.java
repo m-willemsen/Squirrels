@@ -75,7 +75,6 @@ public class GUIFunctions extends Functions {
 		g.tabs.setSelectedIndex(2);
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-			System.out.println("####################");
 			refreshGameScreen();
 		}
 	}
