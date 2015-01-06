@@ -69,6 +69,7 @@ public class GUIFunctions extends Functions {
 		JPanel herman = gameScreen();
 		g.tabs.remove(2);
 		g.tabs.addTab("Game", herman);
+		g.tabs.setSelectedIndex(2);
 	}
 
 	public JPanel gameScreen() {
