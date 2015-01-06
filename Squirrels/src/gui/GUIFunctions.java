@@ -1,10 +1,12 @@
-package gui;
+	package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -72,8 +74,11 @@ public class GUIFunctions extends Functions {
 	public JPanel gameScreen() {
 		JPanel tabGame = new JPanel();
 		if (GUI.lastCall == null) {
+			g.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 			tabGame.add(new JLabel("You need to make a call first"));
 		} else {
+			g.frame.setSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.2), 
+					(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
 			tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
 			JPanel p = (JPanel) tabGame;
 			JButton startButton = new JButton("Start!!");
