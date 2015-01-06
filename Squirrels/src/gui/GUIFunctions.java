@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import voip.SkypeLocalLibrary;
 
@@ -73,7 +75,7 @@ public class GUIFunctions extends Functions {
 	}
 
 	public JPanel gameScreen() {
-		JPanel tabGame = new JPanel();
+		JPanel tabGame = new JPanel(new GridLayout(4,1));
 		if (GUI.lastCall == null) {
 			g.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 			tabGame.add(new JLabel("You need to make a call first"));
@@ -81,8 +83,17 @@ public class GUIFunctions extends Functions {
 			g.frame.setSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.2), 
 					(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
 			tabGame.setSize(Frame.WIDTH, Frame.HEIGHT);
-			JPanel p = (JPanel) tabGame;
+			JPanel p = tabGame;
+			JLabel turn;
+			if(g.gh.isItMyTurn())
+				turn = new JLabel("It is your turn!",SwingConstants.CENTER);
+			else
+				turn = new JLabel("Wait for the other player, please.",SwingConstants.CENTER);
+			turn.setBackground(Color.gray);
+			
+			p.add(turn);
 			JButton startButton = new JButton("Start!!");
+			startButton.setBackground(Color.gray);
 			startButton.addActionListener(new ActionListener() {
 
 				@Override
@@ -93,6 +104,7 @@ public class GUIFunctions extends Functions {
 			});
 			p.add(startButton);
 			JButton move = new JButton("DO MOVE");
+			move.setBackground(Color.gray);
 			move.addActionListener(new ActionListener() {
 
 				@Override
@@ -105,6 +117,7 @@ public class GUIFunctions extends Functions {
 			});
 			p.add(move);
 			JButton reset = new JButton("Reset");
+			reset.setBackground(Color.gray);
 			reset.addActionListener(new ActionListener() {
 
 				@Override
