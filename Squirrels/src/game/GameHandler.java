@@ -103,6 +103,7 @@ public class GameHandler extends Functions {
 		System.out.println("gameIsStarted: "+g.gameIsStarted);
 		if (!g.gameIsStarted) {
 			sendCommand(Protocol.START, null);
+			myTurn = true;
 			g.gf.refreshGameScreen();
 			reset();
 		}

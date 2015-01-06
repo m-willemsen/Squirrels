@@ -338,6 +338,17 @@ public class SkypeLocalLibrary extends Functions {
 		TangibleVirtualGame.lastCall.setSendVideoEnabled(status);
 		
 	}
+	
+	public void endCurrentCall(){
+		try {
+			g.lastCall.finish();
+			g.lastCall = null;
+			g.gf.refreshGameScreen();
+		} catch (SkypeException e) {
+			errorHandler(e);
+		}
+		
+	}
 
 	/*
 	 * //DELETE THIS!! public static void main (String[] args){
