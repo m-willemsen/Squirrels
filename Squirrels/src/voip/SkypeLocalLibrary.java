@@ -249,7 +249,7 @@ public class SkypeLocalLibrary extends Functions {
 
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
-				TangibleVirtualGame.lastCall = receivedCall;
+				g.lastCall = receivedCall;
 				if(GUIFunctions.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 					receivedCall.answer();
 					GUIFunctions.createFrame(g.gf.gameScreen());
