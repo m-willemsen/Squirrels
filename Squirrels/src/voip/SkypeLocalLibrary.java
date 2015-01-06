@@ -35,7 +35,6 @@ import game.Protocol;
 import global.Functions;
 import gui.GUI;
 import gui.GUIFunctions;
-import gui.TangibleVirtualGame;
 
 public class SkypeLocalLibrary extends Functions {
 	private boolean videoStatus = true;
@@ -175,7 +174,7 @@ public class SkypeLocalLibrary extends Functions {
 //		}
 		Call call = getFriend(friendId).call();
 		SkypeClient.showSkypeWindow();
-		SkypeClient.showChatWindow(friendId, "Zullen we een spelletje " + TangibleVirtualGame.GAME_TITLE
+		SkypeClient.showChatWindow(friendId, "Zullen we een spelletje " + g.GAME_TITLE
 				+ " spelen? Daarvoor moet je wel het spel geinstalleerd hebben.");
 		/*Scanner s = new Scanner(System.in);
 		boolean closeChat = false;
@@ -195,7 +194,7 @@ public class SkypeLocalLibrary extends Functions {
 
 	public void toggleVideo(Call call) throws SkypeException {
 		if (call == null){
-			call = TangibleVirtualGame.lastCall;
+			call = g.lastCall;
 		}
 		boolean newvideoStatus = !videoStatus;
 		videoStatus = newvideoStatus;
@@ -257,7 +256,7 @@ public class SkypeLocalLibrary extends Functions {
 				}
 				else {
 					receivedCall.cancel();
-					TangibleVirtualGame.lastCall = null;
+					g.lastCall = null;
 				}
 				System.out.println("callReceived triggered: " + receivedCall.getPartnerId());
 			}
@@ -334,8 +333,8 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public void setVideoOn(boolean status) throws SkypeException {
-		TangibleVirtualGame.lastCall.setReceiveVideoEnabled(status);
-		TangibleVirtualGame.lastCall.setSendVideoEnabled(status);
+		g.lastCall.setReceiveVideoEnabled(status);
+		g.lastCall.setSendVideoEnabled(status);
 		
 	}
 	
