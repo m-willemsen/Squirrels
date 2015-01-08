@@ -6,7 +6,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,7 +19,7 @@ import javax.swing.JOptionPane;
 
 public class Functions {
 	// First define some constants
-	public PrintStream logginStream = getLogginStream("log.txt");
+	public PrintStream logginStream = System.out;//getLogginStream("log.txt");
 	private GUI g;
 
 	public Functions(GUI g){
@@ -32,10 +31,20 @@ public class Functions {
 	 * @param e The error
 	 */
 	public void errorHandler(Exception e) {
-		if (g.frame != null)
+		try {
+		if (g != null && g.frame != null)
 			JOptionPane.showMessageDialog(g.frame, e.getMessage(), "An error occurred",
 					JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace(logginStream);
+		}
+		catch(Exception ex){
+			try {
+				e.printStackTrace();
+			}
+			catch(Exception exc){
+				exc.printStackTrace();
+			}
+		}
 	}
 
 	/**

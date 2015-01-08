@@ -1,17 +1,18 @@
 package voip;
 
+import exceptions.FriendNotFoundException;
+import game.Protocol;
+import global.Functions;
+import gui.GUI;
+
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.Scanner;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
-import com.skype.Application;
 import com.skype.Call;
 import com.skype.CallListener;
 import com.skype.Chat;
@@ -21,20 +22,12 @@ import com.skype.Friend;
 import com.skype.Skype;
 import com.skype.SkypeClient;
 import com.skype.SkypeException;
-import com.skype.Stream;
 import com.skype.User;
 import com.skype.connector.Connector;
 import com.skype.connector.ConnectorException;
 import com.skype.connector.ConnectorListener;
 import com.skype.connector.ConnectorMessageEvent;
 import com.skype.connector.ConnectorStatusEvent;
-
-import exceptions.FriendNotFoundException;
-import game.GameHandler;
-import game.Protocol;
-import global.Functions;
-import gui.GUI;
-import gui.GUIFunctions;
 
 public class SkypeLocalLibrary extends Functions {
 	private boolean videoStatus = true;
@@ -174,7 +167,7 @@ public class SkypeLocalLibrary extends Functions {
 //		}
 		Call call = getFriend(friendId).call();
 		SkypeClient.showSkypeWindow();
-		SkypeClient.showChatWindow(friendId, "Zullen we een spelletje " + g.GAME_TITLE
+		SkypeClient.showChatWindow(friendId, "Zullen we een spelletje " + GUI.GAME_TITLE
 				+ " spelen? Daarvoor moet je wel het spel geinstalleerd hebben.");
 		/*Scanner s = new Scanner(System.in);
 		boolean closeChat = false;
@@ -194,7 +187,7 @@ public class SkypeLocalLibrary extends Functions {
 
 	public void toggleVideo(Call call) throws SkypeException {
 		if (call == null){
-			call = g.lastCall;
+			call = GUI.lastCall;
 		}
 		boolean newvideoStatus = !videoStatus;
 		videoStatus = newvideoStatus;
@@ -202,11 +195,21 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	private void checkConditions() throws exceptions.SkypeException, SkypeException {
+		try {
 		if (!Skype.isInstalled()) {
 			throw new exceptions.SkypeException("Please install Skype from skype.com");
 		}
 		if (!Skype.isRunning()) {
 			throw new exceptions.SkypeException("Please start Skype");
+		}
+		}
+		catch(UnsatisfiedLinkError e){
+			JOptionPane.showMessageDialog(null, "You need to install the 32 bit version of Java.\n Error: "+e.getLocalizedMessage(), e.getClass().toString(), JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		catch(exceptions.SkypeException e){
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 
@@ -248,7 +251,7 @@ public class SkypeLocalLibrary extends Functions {
 
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
-				g.lastCall = receivedCall;
+				GUI.lastCall = receivedCall;
 				if(g.gf.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
 					receivedCall.answer();
 					g.gf.refreshGameScreen();
@@ -257,7 +260,7 @@ public class SkypeLocalLibrary extends Functions {
 				}
 				else {
 					receivedCall.cancel();
-					g.lastCall = null;
+					GUI.lastCall = null;
 				}
 				System.out.println("callReceived triggered: " + receivedCall.getPartnerId());
 			}
@@ -315,17 +318,12 @@ public class SkypeLocalLibrary extends Functions {
 
 	protected void sendMessageToGame(ChatMessage receivedChatMessage) {
 		try {
-			if (g.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(g.lastCall.getPartnerId())){
+			if (GUI.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(GUI.lastCall.getPartnerId())){
 				g.gh.receiveCommandsFromSkype(receivedChatMessage.getContent());
 			}
 		} catch (SkypeException e) {
 			errorHandler(e);
 		}
-	}
-
-	private void printStreamInfo(Stream stream) {
-		System.out.println("All info about stream " + stream.getId() + ":\n" + "app: " + stream.getApplication() + "\n"
-				+ "friend: " + stream.getFriend().toString());
 	}
 
 	public SkypeLocalLibrary(GUI g) throws SkypeException {
@@ -335,15 +333,15 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public void setVideoOn(boolean status) throws SkypeException {
-		g.lastCall.setReceiveVideoEnabled(status);
-		g.lastCall.setSendVideoEnabled(status);
+		GUI.lastCall.setReceiveVideoEnabled(status);
+		GUI.lastCall.setSendVideoEnabled(status);
 		
 	}
 	
 	public void endCurrentCall(){
 		try {
-			g.lastCall.finish();
-			g.lastCall = null;
+			GUI.lastCall.finish();
+			GUI.lastCall = null;
 			g.gf.refreshGameScreen();
 		} catch (SkypeException e) {
 			errorHandler(e);

@@ -1,16 +1,13 @@
 package game;
 
+import global.Functions;
+import gui.GUI;
+
 import java.util.Arrays;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JOptionPane;
 
 import com.skype.SkypeException;
-
-import voip.SkypeLocalLibrary;
-import global.Functions;
-import gui.GUI;
-import gui.GUIFunctions;
 
 public class GameHandler extends Functions {
 	private Protocol p;
@@ -30,20 +27,25 @@ public class GameHandler extends Functions {
 	private GUI g;
 	private boolean myTurn;
 
+	/**
+	 * Create a new gameHandler
+	 * @param g The gui.
+	 */
 	public GameHandler(GUI g) {
 		super(g);
 		this.g = g;
 	}
 
+	/**
+	 * A command is received through Skype
+	 * @param commandMessage The message we received
+	 * @return The command we will send in return
+	 * @throws SkypeException throws this exception if it was thrown by one of the methods that are requested.
+	 */
 	public String receiveCommandsFromSkype(String commandMessage) throws SkypeException {
 		//Create some variables
 		String command = Protocol.getCommand(commandMessage);
 		String[] params = Protocol.getParams(commandMessage);
-		
-		//Print for debugging
-		System.out.println("Command received: " + commandMessage);
-		System.out.println("Command=" + command);
-		System.out.println("Params: " + implode(params, " - "));
 		
 		// You need to fill the hashmap of the protocol, if it is not done yet
 		if (p == null) {
@@ -64,26 +66,20 @@ public class GameHandler extends Functions {
 			return sendAppropriateCommandBack(Protocol.DOMOVE, Protocol.getParams(commandMessage));
 		}
 		else if (command.equals(Protocol.RESET)) {
-			System.out.println("Go back to the starting position");
 			reset();
 			return sendAppropriateCommandBack(command, null);
 		}
 		else if (command.equals(Protocol.START)) {
-			System.out.println("CREATE NEW GAME");
 			g.gameIsStarted = true;
 			init();
 			return sendAppropriateCommandBack(command, null);
 		}
 		else if (command.equals(Protocol.ERROR)) {
-			System.out.println("WE RECEIVED AN ERROR");
 			String errorMessage = "No errormessage available";
 			if (params.length>0){
 				errorMessage = params[0];
 			}
 			String sendCommand = implode(Arrays.copyOfRange(params, 1, params.length), Protocol.DIVIDER);
-			System.out.println("Errormessage: "+errorMessage);
-			System.out.println("sendCommand: "+sendCommand);
-			
 			JOptionPane.showMessageDialog(g.frame, "An error occurred:\n The error message: "+errorMessage+".\n This error occurred during sending this command: "+sendCommand, "An error occurred", JOptionPane.ERROR_MESSAGE);
 		}
 		else {
@@ -93,14 +89,23 @@ public class GameHandler extends Functions {
 		return null;
 	}
 
+	/**
+	 * Reset the game. Set both pawns at the startlocation (0).
+	 */
 	public void reset() {
 		// Set all values to their startvalue
 		positionMyPawn = 0; //own pawn
 		doMove(0); //Opponents pawn
 	}
 
+	/**
+	 * Initialize the game if it is not started yet.
+	 * 	- Send the start command
+	 *  - Set the turn
+	 *  - Refresh the gamescreen
+	 *  - Set both pawns at the startlocation
+	 */
 	public void init() {
-		System.out.println("gameIsStarted: "+g.gameIsStarted);
 		if (!g.gameIsStarted) {
 			sendCommand(Protocol.START, null);
 			myTurn = true;
@@ -111,9 +116,13 @@ public class GameHandler extends Functions {
 		//TODO start something here, that will monitor the game
 	}
 
+	/**
+	 * Set the pawn of the opponent. Also change the turn.
+	 * @param newLocation the new location for the pawn
+	 */
 	private void doMove(int newLocation) {
 		positionOpponentPawn = newLocation;
-		System.out.println("We need to move to " + newLocation);
+		System.out.println("We need to move the opponents pawn to " + newLocation);
 		//Now move the real piece to this position
 		checkFinish();
 		myTurn = true;
@@ -128,8 +137,8 @@ public class GameHandler extends Functions {
 	public void playerDidMove(int newLocation){
 		if (myTurn || newLocation==positionMyPawn){
 		positionMyPawn = newLocation;
-		System.out.println("We have moved to " + newLocation);
-		//checkQuestionType();
+		System.out.println("We have moved our own pawn to " + newLocation);
+		checkQuestionType();
 		checkFinish();
 		myTurn = false;
 		sendCommand(Protocol.DOMOVE, new String[]{Integer.toString(newLocation)});
@@ -140,21 +149,30 @@ public class GameHandler extends Functions {
 		}
 	}
 
-	/*private void checkQuestionType() {
+	/**
+	 * Check if it is a "current" question, so the cam should be turned off.
+	 */
+	private void checkQuestionType() {
 		if (Arrays.binarySearch(positionsWithCurrentQuestions, positionMyPawn)>=0){
 			//The current position is not in the array, so no problem
 		}
 		else {
 			//Turn of the cam!!
+			/* Since this is not supported anymore, we will just show a message to the players
 			try {
 				SkypeLocalLibrary skype = new SkypeLocalLibrary(g);
 				skype.setVideoOn(false);
 			} catch (SkypeException e) {
 				errorHandler(e);
-			}
+			}*/
+			JOptionPane.showMessageDialog(g.frame, "For this question, you need to turn of your camera. Please do this before continuing.");
 		}
-	}*/
+	}
 
+	/**
+	 * Check if the game is finished
+	 * @return true if the game is finished
+	 */
 	private boolean checkFinish() {
 		if (positionMyPawn > finalPosition || positionOpponentPawn>finalPosition) {
 			return true;
@@ -162,6 +180,12 @@ public class GameHandler extends Functions {
 		return false;
 	}
 
+	/**
+	 * Send the command that confirms the received command
+	 * @param command the received command
+	 * @param parameters the parameters for the received command
+	 * @return the command that is send
+	 */
 	public String sendAppropriateCommandBack(String command, String[] parameters) {
 		// You need to fill the hashmap of the protocol, if it is not done yet
 		if (p == null) {
@@ -170,6 +194,12 @@ public class GameHandler extends Functions {
 		return sendCommand(Protocol.commandos.get(command), parameters);
 	}
 
+	/**
+	 * Send a command
+	 * @param command
+	 * @param parameters
+	 * @return the command that is send
+	 */
 	public String sendCommand(String command, String[] parameters) {
 		try {
 			//lock.lock();
@@ -180,11 +210,9 @@ public class GameHandler extends Functions {
 			if (parameters != null)
 				message += Protocol.DIVIDER + implode(parameters, Protocol.DIVIDER);
 			if (command.equals(Protocol.START)){
-				System.out.println("Set game is started to true");
 				g.gameIsStarted=true;
 				init();
 			}
-			System.out.println("SEND THIS: " + message);
 			g.skype.getChat().send(message);
 			messageSend = message;
 			return message;
@@ -195,6 +223,10 @@ public class GameHandler extends Functions {
 		}
 	}
 	
+	/**
+	 * Check if it is my turn
+	 * @return true if it is my turn
+	 */
 	public boolean isItMyTurn(){
 		return myTurn;
 	}

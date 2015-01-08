@@ -1,10 +1,7 @@
 	package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -12,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,7 +20,6 @@ import com.skype.Call;
 import com.skype.SkypeException;
 
 import exceptions.FriendNotFoundException;
-import game.GameHandler;
 import game.Protocol;
 import global.Functions;
 
@@ -52,7 +47,7 @@ public class GUIFunctions extends Functions {
 				if (confirmed && arg0.getSource() instanceof JButton) {
 					try {
 						Call c = g.skype.startCall(arg0.getActionCommand());
-						g.lastCall = c;
+						GUI.lastCall = c;
 						System.out.println("Call created, now start the game");
 						if (c.getStatus().equals(Call.Status.INPROGRESS))
 						g.gh.init();
@@ -145,14 +140,14 @@ public class GUIFunctions extends Functions {
 		JButton button = null;
 		try {
 			button = new JButton("Turn video "
-					+ returnIf(g.lastCall.isSendVideoEnabled(), "off", "on"));
+					+ returnIf(GUI.lastCall.isSendVideoEnabled(), "off", "on"));
 			button.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
 						SkypeLocalLibrary skype = new SkypeLocalLibrary(g);
-						skype.toggleVideo(g.lastCall);
+						skype.toggleVideo(GUI.lastCall);
 					} catch (SkypeException e) {
 						errorHandler(e);
 					}

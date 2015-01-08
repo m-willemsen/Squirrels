@@ -49,11 +49,19 @@ public class Protocol extends Functions {
 			CONFIRM_ANSWER+kvd+CONFIRM_ANSWER+"ED"+ed+
 			RESET+kvd+RESET+"ED"+ed;
 	
+	/**
+	 * Fill the command hashmap
+	 * @param g
+	 */
 	public Protocol(GUI g){
 		super(g);
 		fillCommandoHashMap();
 	}
 
+	/**
+	 * Fill the command hashmap
+	 * @return the visualisation of the hashmap
+	 */
 	private String fillCommandoHashMap() {
 		String[] lines = datasource.split(ed);
 		for (String line:lines){
@@ -63,6 +71,11 @@ public class Protocol extends Functions {
 		return showHashMap(commandos);
 	}
 	
+	/**
+	 * Get the command out of the command message
+	 * @param commandMessage the complete message
+	 * @return the command
+	 */
 	public static String getCommand(String commandMessage){
 		String[] commandArray = commandMessage.split(Protocol.DIVIDER);
 		int commandindex = Protocol.COMMAND_INDEX;
@@ -71,13 +84,23 @@ public class Protocol extends Functions {
 		
 	}
 	
+	/**
+	 * Get the parameters of the command message
+	 * @param commandMessage the complete message
+	 * @return the parameters
+	 */
 	public static String[] getParams(String commandMessage){
 		String[] arr = commandMessage.split(DIVIDER);
 		return Arrays.copyOfRange(arr, COMMAND_INDEX+1, arr.length);
 	}
 
+	/**
+	 * Check if this command belongs to the previous command
+	 * @param commandMessage
+	 * @param messageSend
+	 * @return
+	 */
 	public static boolean checkMatch(String commandMessage, String messageSend) {
-		System.out.println("Compare "+commandMessage+" with this one "+messageSend);
 		return (commandos.get(getCommand(messageSend)).equals(getCommand(commandMessage)));
 	}
 }
