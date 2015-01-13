@@ -65,6 +65,8 @@ public class GUI {
 	private JTextField searchField;
 	private ActionListener searchListener;
 
+	public Font font = new Font(Font.SANS_SERIF, 1, 20);
+
 	public GUI() {// throws Exception {
 		try {
 			skype = new SkypeLocalLibrary(this);
@@ -76,11 +78,13 @@ public class GUI {
 		System.out.println("Skype local library created");
 		frame = new JFrame(GAME_TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setFont(font);
 		tabs = new JTabbedPane();
-
+		tabs.setFont(font);
 		// contacts tab
 		tabContacts = new JPanel(new BorderLayout());
 		invite = new JButton("Invite");
+		invite.setFont(font);
 		invite.setBackground(Color.gray);
 		Friend[] list = null;
 		try {
@@ -91,6 +95,7 @@ public class GUI {
 			f.errorHandler(e);
 		}
 		contactList = new JList<Friend>(list);
+		contactList.setFont(font);
 		contactList.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -104,8 +109,10 @@ public class GUI {
 
 		invite.addActionListener(gf.defaultActionListener());
 		search = new JButton("Search");
+		search.setFont(font);
 		search.setBackground(Color.gray);
 		searchField = new JTextField();
+		searchField.setFont(font);
 		searchField.setColumns(30);
 		searchField.setBackground(Color.lightGray);
 
@@ -162,6 +169,7 @@ class ProListCellRenderer extends DefaultListCellRenderer {
 	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus) {
 		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		c.setFont(super.getFont());
 		if (isSelected) {
 			c.setForeground(Color.white);
 			c.setBackground(Color.black);

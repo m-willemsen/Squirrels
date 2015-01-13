@@ -56,7 +56,7 @@ public class GUIFunctions extends Functions {
 						if (c.getStatus().equals(Call.Status.INPROGRESS))
 						g.gh.init();
 						g.gf.refreshGameScreen();
-						c.setSendVideoEnabled(true);
+						//c.setSendVideoEnabled(true);
 					} catch (SkypeException | FriendNotFoundException | exceptions.SkypeException e) {
 						errorHandler(e);
 					}
@@ -81,6 +81,7 @@ public class GUIFunctions extends Functions {
 
 	public JPanel gameScreen() {
 		JPanel tabGame = new JPanel(new GridLayout(7,1));
+		tabGame.setFont(g.font);
 		if (GUI.lastCall == null) {
 			g.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 			tabGame.add(new JLabel("You need to make a call first"));
@@ -95,19 +96,22 @@ public class GUIFunctions extends Functions {
 			else
 				turn = new JLabel("Wait for the other player, please.",SwingConstants.CENTER);
 			turn.setBackground(Color.gray);
-			
+			turn.setFont(g.font);
 			p.add(turn);
 			JLabel myPawn;
 			myPawn = new JLabel("Your location: "+g.gh.positionMyPawn,SwingConstants.CENTER);
+			myPawn.setFont(g.font);
 			myPawn.setBackground(Color.gray);
 			p.add(myPawn);
 			
 			JLabel OtherPawn;
 			OtherPawn = new JLabel("The other person's location: "+g.gh.positionOpponentPawn,SwingConstants.CENTER);
+			OtherPawn.setFont(g.font);
 			OtherPawn.setBackground(Color.gray);
 			p.add(OtherPawn);
 			
 			JButton startButton = new JButton("Start!!");
+			startButton.setFont(g.font);
 			startButton.setBackground(Color.gray);
 			startButton.addActionListener(new ActionListener() {
 
@@ -120,6 +124,7 @@ public class GUIFunctions extends Functions {
 			p.add(startButton);
 			
 			nrOfSteps = new JTextField();
+			nrOfSteps.setFont(g.font);
 			final String placeholderText = "Fill in the number of steps";
 			nrOfSteps.setText(placeholderText);
 			nrOfSteps.addFocusListener(new FocusListener(){
@@ -155,10 +160,12 @@ public class GUIFunctions extends Functions {
 			nrOfSteps.addActionListener(doMoveActionListener);
 			p.add(nrOfSteps);
 			JButton move = new JButton("DO MOVE");
+			move.setFont(g.font);
 			move.setBackground(Color.gray);
 			move.addActionListener(doMoveActionListener);
 			p.add(move);
 			JButton reset = new JButton("Reset");
+			reset.setFont(g.font);
 			reset.setBackground(Color.gray);
 			reset.addActionListener(new ActionListener() {
 
