@@ -21,7 +21,7 @@ public class GameHandler extends Functions {
 	public int positionMyPawn;
 	private int finalPosition = 25;
 	private int[] positionsWithCurrentQuestions = new int[] { 1, 6, 12, 18, 24 };
-	private int positionOpponentPawn;
+	public int positionOpponentPawn;
 	//private ReentrantLock lock = new ReentrantLock();
 	
 	private GUI g;

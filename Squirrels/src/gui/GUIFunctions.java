@@ -7,11 +7,14 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import voip.SkypeLocalLibrary;
@@ -25,6 +28,7 @@ import global.Functions;
 
 public class GUIFunctions extends Functions {
 	private GUI g;
+	private JTextField nrOfSteps;
 
 	public GUIFunctions(GUI g) {
 		super(g);
@@ -76,7 +80,7 @@ public class GUIFunctions extends Functions {
 	}
 
 	public JPanel gameScreen() {
-		JPanel tabGame = new JPanel(new GridLayout(4,1));
+		JPanel tabGame = new JPanel(new GridLayout(7,1));
 		if (GUI.lastCall == null) {
 			g.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 			tabGame.add(new JLabel("You need to make a call first"));
@@ -93,6 +97,16 @@ public class GUIFunctions extends Functions {
 			turn.setBackground(Color.gray);
 			
 			p.add(turn);
+			JLabel myPawn;
+			myPawn = new JLabel("Your location: "+g.gh.positionMyPawn,SwingConstants.CENTER);
+			myPawn.setBackground(Color.gray);
+			p.add(myPawn);
+			
+			JLabel OtherPawn;
+			OtherPawn = new JLabel("The other person's location: "+g.gh.positionOpponentPawn,SwingConstants.CENTER);
+			OtherPawn.setBackground(Color.gray);
+			p.add(OtherPawn);
+			
 			JButton startButton = new JButton("Start!!");
 			startButton.setBackground(Color.gray);
 			startButton.addActionListener(new ActionListener() {
@@ -104,17 +118,45 @@ public class GUIFunctions extends Functions {
 
 			});
 			p.add(startButton);
-			JButton move = new JButton("DO MOVE");
-			move.setBackground(Color.gray);
-			move.addActionListener(new ActionListener() {
+			
+			nrOfSteps = new JTextField();
+			final String placeholderText = "Fill in the number of steps";
+			nrOfSteps.setText(placeholderText);
+			nrOfSteps.addFocusListener(new FocusListener(){
+		        @Override
+		        public void focusGained(FocusEvent e){
+		        	if (nrOfSteps.getText().equals(placeholderText))
+		        		nrOfSteps.setText("");
+		        }
+
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					if (nrOfSteps.getText().equals(""))
+		        		nrOfSteps.setText(placeholderText);
+				}
+		    });
+			nrOfSteps.setColumns(30);
+			nrOfSteps.setBackground(Color.lightGray);
+			ActionListener doMoveActionListener = new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					g.gh.playerDidMove(g.gh.positionMyPawn+1);
+					try {
+						int steps = Integer.parseInt(nrOfSteps.getText());
+						g.gh.playerDidMove(g.gh.positionMyPawn+steps);
+					}
+					catch(NumberFormatException e){
+						errorHandler(e);
+					}
 					//g.gh.sendCommand(Protocol.DOMOVE, new String[] { "10" });
 				}
 
-			});
+			};
+			nrOfSteps.addActionListener(doMoveActionListener);
+			p.add(nrOfSteps);
+			JButton move = new JButton("DO MOVE");
+			move.setBackground(Color.gray);
+			move.addActionListener(doMoveActionListener);
 			p.add(move);
 			JButton reset = new JButton("Reset");
 			reset.setBackground(Color.gray);

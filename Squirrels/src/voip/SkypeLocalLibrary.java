@@ -155,38 +155,34 @@ public class SkypeLocalLibrary extends Functions {
 
 	public Call startCall(String friendId) throws SkypeException, FriendNotFoundException, exceptions.SkypeException {
 		checkConditions();
-		//check if call exists
-		//TODO
-//		Iterator<Entry<String, Call>> iter = Call.calls.entrySet().iterator();
-//		while(iter.hasNext()){
-//			Call c = iter.next().getValue();
-//			
-//			if (c.getPartner().getId().equals(friendId)){
-//				return c;
-//			}
-//		}
+		// check if call exists
+		// TODO
+		// Iterator<Entry<String, Call>> iter =
+		// Call.calls.entrySet().iterator();
+		// while(iter.hasNext()){
+		// Call c = iter.next().getValue();
+		//
+		// if (c.getPartner().getId().equals(friendId)){
+		// return c;
+		// }
+		// }
 		Call call = getFriend(friendId).call();
 		SkypeClient.showSkypeWindow();
 		SkypeClient.showChatWindow(friendId, "Zullen we een spelletje " + GUI.GAME_TITLE
 				+ " spelen? Daarvoor moet je wel het spel geinstalleerd hebben.");
-		/*Scanner s = new Scanner(System.in);
-		boolean closeChat = false;
-		while (!closeChat) {
-			if (s.hasNextLine()) {
-				System.out.println("Typ hier een bericht om te verzenden: (of typ close)");
-				String message = s.nextLine();
-				if (message.equals("close")) {
-					closeChat = true;
-				}
-				Skype.chat(friendId).send(message);
-			}
-		}
-		s.close();*/
+		/*
+		 * Scanner s = new Scanner(System.in); boolean closeChat = false; while
+		 * (!closeChat) { if (s.hasNextLine()) {
+		 * System.out.println("Typ hier een bericht om te verzenden: (of typ close)"
+		 * ); String message = s.nextLine(); if (message.equals("close")) {
+		 * closeChat = true; } Skype.chat(friendId).send(message); } }
+		 * s.close();
+		 */
 		return call;
 	}
 
 	public void toggleVideo(Call call) throws SkypeException {
-		if (call == null){
+		if (call == null) {
 			call = GUI.lastCall;
 		}
 		boolean newvideoStatus = !videoStatus;
@@ -196,26 +192,30 @@ public class SkypeLocalLibrary extends Functions {
 
 	private void checkConditions() throws exceptions.SkypeException, SkypeException {
 		try {
-		if (!Skype.isInstalled()) {
-			throw new exceptions.SkypeException("Please install Skype from skype.com");
-		}
-		if (!Skype.isRunning()) {
-			throw new exceptions.SkypeException("Please start Skype");
-		}
-		}
-		catch(UnsatisfiedLinkError e){
-			JOptionPane.showMessageDialog(null, "You need to install the 32 bit version of Java.\n Error: "+e.getLocalizedMessage(), e.getClass().toString(), JOptionPane.ERROR_MESSAGE);
+			System.out.println("Check isInstalled");
+			if (!Skype.isInstalled()) {
+				throw new exceptions.SkypeException("Please install Skype from skype.com");
+			}
+			System.out.println("Check isRunning");
+			if (!Skype.isRunning()) {
+				throw new exceptions.SkypeException("Please start Skype");
+			}
+			System.out.println("Running is checked");
+		} catch (UnsatisfiedLinkError e) {
+			JOptionPane.showMessageDialog(null,
+					"You need to install the 32 bit version of Java.\n Error: " + e.getLocalizedMessage(), e.getClass()
+							.toString(), JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
-		}
-		catch(exceptions.SkypeException e){
+		} catch (exceptions.SkypeException e) {
 			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		System.out.println("Checked conditions");
 	}
 
 	public Friend[] getContacts(String skypeId) throws SkypeException, exceptions.SkypeException {
 		checkConditions();
-		if (skypeId == null || skypeId.equals("") || skypeId.equals(" ")){
+		if (skypeId == null || skypeId.equals("") || skypeId.equals(" ")) {
 			return getContacts();
 		}
 		Friend[] contacts = Skype.getContactList().getAllFriends();
@@ -242,23 +242,26 @@ public class SkypeLocalLibrary extends Functions {
 	}
 
 	public void initSkype() throws SkypeException {
+		System.out.println("Start initSkype()");
 		try {
 			checkConditions();
 		} catch (exceptions.SkypeException e) {
 			errorHandler(e);
+			System.out.println(e.getLocalizedMessage());
 		}
+		System.out.println("checked conditions");
 		Skype.addCallListener(new CallListener() {
 
 			@Override
 			public void callReceived(Call receivedCall) throws SkypeException {
 				GUI.lastCall = receivedCall;
-				if(g.gf.confimationMessage("You are being called by "+receivedCall.getPartner().getFullName()+". Would you like to play a game with him/her?")){
+				if (g.gf.confimationMessage("You are being called by " + receivedCall.getPartner().getFullName()
+						+ ". Would you like to play a game with him/her?")) {
 					receivedCall.answer();
 					g.gf.refreshGameScreen();
 					g.gh.init();
-					//GUIFunctions.createFrame(g.gf.gameScreen());
-				}
-				else {
+					// GUIFunctions.createFrame(g.gf.gameScreen());
+				} else {
 					receivedCall.cancel();
 					GUI.lastCall = null;
 				}
@@ -271,10 +274,10 @@ public class SkypeLocalLibrary extends Functions {
 			}
 
 		});
-		//Skype.removeChatMessageListener(getDefaultChatMessageListener());
-		if (Skype.chatMessageListeners.size()==0){
-		Skype.addChatMessageListener(getDefaultChatMessageListener());
-		System.out.println(Arrays.toString(Skype.chatMessageListeners.toArray()));
+		// Skype.removeChatMessageListener(getDefaultChatMessageListener());
+		if (Skype.chatMessageListeners.size() == 0) {
+			Skype.addChatMessageListener(getDefaultChatMessageListener());
+			System.out.println(Arrays.toString(Skype.chatMessageListeners.toArray()));
 		}
 		// try {
 		//
@@ -318,7 +321,8 @@ public class SkypeLocalLibrary extends Functions {
 
 	protected void sendMessageToGame(ChatMessage receivedChatMessage) {
 		try {
-			if (GUI.lastCall!= null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)&&receivedChatMessage.getSenderId().equals(GUI.lastCall.getPartnerId())){
+			if (GUI.lastCall != null && receivedChatMessage.getContent().startsWith(Protocol.COMMAND_PREFIX)
+					&& receivedChatMessage.getSenderId().equals(GUI.lastCall.getPartnerId())) {
 				g.gh.receiveCommandsFromSkype(receivedChatMessage.getContent());
 			}
 		} catch (SkypeException e) {
@@ -328,17 +332,19 @@ public class SkypeLocalLibrary extends Functions {
 
 	public SkypeLocalLibrary(GUI g) throws SkypeException {
 		super(g);
+		System.out.println("super(g) done");
 		initSkype();
 		this.g = g;
+		System.out.println("blatiebla");
 	}
 
 	public void setVideoOn(boolean status) throws SkypeException {
 		GUI.lastCall.setReceiveVideoEnabled(status);
 		GUI.lastCall.setSendVideoEnabled(status);
-		
+
 	}
-	
-	public void endCurrentCall(){
+
+	public void endCurrentCall() {
 		try {
 			GUI.lastCall.finish();
 			GUI.lastCall = null;
@@ -346,7 +352,7 @@ public class SkypeLocalLibrary extends Functions {
 		} catch (SkypeException e) {
 			errorHandler(e);
 		}
-		
+
 	}
 
 	/*

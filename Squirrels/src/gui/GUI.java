@@ -69,9 +69,11 @@ public class GUI {
 		try {
 			skype = new SkypeLocalLibrary(this);
 		} catch (SkypeException e) {
+			System.out.println("An error occurred. It should be handled. Error: "+e.getLocalizedMessage());
 			Functions f = new Functions(this);
 			f.errorHandler(e);
 		}
+		System.out.println("Skype local library created");
 		frame = new JFrame(GAME_TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tabs = new JTabbedPane();
