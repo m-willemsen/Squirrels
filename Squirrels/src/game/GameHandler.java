@@ -4,8 +4,12 @@ import global.Functions;
 import gui.GUI;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JOptionPane;
+
+import org.zu.ardulink.Link;
+import org.zu.ardulink.RawDataListener;
 
 import com.skype.SkypeException;
 
@@ -26,6 +30,7 @@ public class GameHandler extends Functions {
 	
 	private GUI g;
 	private boolean myTurn;
+	private Link link;
 
 	/**
 	 * Create a new gameHandler
@@ -34,6 +39,24 @@ public class GameHandler extends Functions {
 	public GameHandler(GUI g) {
 		super(g);
 		this.g = g;
+		link = Link.getDefaultInstance();
+		List<String> ports = link.getPortList();
+		link.addRawDataListener(arduinoListener());
+	}
+
+	private RawDataListener arduinoListener() {
+		return new RawDataListener(){
+
+			@Override
+			public void parseInput(String arg0, int arg1, int[] arg2) {
+				System.out.println("INPUT ARRIVED");
+				System.out.println("- "+arg0);
+				System.out.println("- "+arg1);
+				System.out.println("- "+Arrays.toString(arg2));
+				playerDidMove(arg1);
+			}
+			
+		};
 	}
 
 	/**
@@ -128,6 +151,7 @@ public class GameHandler extends Functions {
 		myTurn = true;
 		g.gf.refreshGameScreen();
 		//TODO do this on the real game
+		link.writeSerial(Integer.toString(newLocation));
 	}
 	
 	/**
