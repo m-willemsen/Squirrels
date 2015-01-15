@@ -153,11 +153,12 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 		positionOpponentPawn = newLocation;
 		System.out.println("We need to move the opponents pawn to " + newLocation);
 		//Now move the real piece to this position
-		bw.write(Integer.toString(newLocation));
-		bw.flush();
+
+		g.gf.refreshGameScreen();
+		//bw.write(Integer.toString(newLocation));
+		//bw.flush();
 		checkFinish();
 		myTurn = true;
-		g.gf.refreshGameScreen();
 	}
 	
 	/**
@@ -169,7 +170,7 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 		else if (myTurn || newLocation==positionMyPawn){
 		positionMyPawn = newLocation;
 		System.out.println("We have moved our own pawn to " + newLocation);
-		checkQuestionType();
+		//checkQuestionType();
 		checkFinish();
 		myTurn = false;
 		sendCommand(Protocol.DOMOVE, new String[]{Integer.toString(newLocation)});
