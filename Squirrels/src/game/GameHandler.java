@@ -290,7 +290,7 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 	        }
 	    }
 	    if (portId == null) {
-	        System.out.println("Could not find COM port.");
+	        JOptionPane.showMessageDialog(g.frame, "Could not find COM port. Please install javax.comm (see installation folder) and the Adruino IDE (see arduino.org)", "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 
