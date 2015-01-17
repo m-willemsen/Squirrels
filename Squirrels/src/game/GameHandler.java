@@ -155,8 +155,10 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 		//Now move the real piece to this position
 
 		g.gf.refreshGameScreen();
-		//bw.write(Integer.toString(newLocation));
-		//bw.flush();
+		if (bw != null) {
+			bw.write(Integer.toString(newLocation));
+			bw.flush();
+		}
 		checkFinish();
 		myTurn = true;
 	}
@@ -291,7 +293,7 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 	        }
 	    }
 	    if (portId == null) {
-	        JOptionPane.showMessageDialog(g.frame, "Could not find COM port. Please install javax.comm (see installation folder) and the Adruino IDE (see arduino.org)", "Error", JOptionPane.ERROR_MESSAGE);
+	        JOptionPane.showMessageDialog(g.frame, "Could not find the board. Please connect the arduino or install javax.comm (see installation folder) and the Adruino IDE (see arduino.org), if you have not done that yet.", "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 
@@ -344,7 +346,7 @@ public class GameHandler extends Functions implements SerialPortEventListener {
 	                            try {
 	                            playerDidMove(Integer.parseInt(inputLine));
 	                            }catch(NumberFormatException e){
-	                            	if (!inputLine.contains("I received:")){
+	                            	if (!inputLine.contains("I received:") && !inputLine.contains("movement is over 180 degrees")){
 	                            		errorHandler(e);
 	                            	}
 	                            }
